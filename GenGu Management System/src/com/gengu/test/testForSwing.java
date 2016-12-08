@@ -1,4 +1,4 @@
-package com.gengu.test;  
+package com.gengu.test;
   
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
