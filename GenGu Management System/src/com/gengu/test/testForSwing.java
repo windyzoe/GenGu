@@ -1,88 +1,65 @@
 package com.gengu.test;
-  
-import java.awt.BorderLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;  
-  
-public class testForSwing extends JFrame{  
-    private JProgressBar bar = new JProgressBar(0, 100);  
-    private JTextArea area = new JTextArea();  
-      
-    public testForSwing() {  
-        setTitle("swingworker和进度条的小例子");  
-        add(bar, BorderLayout.CENTER);  
-        add(area, BorderLayout.SOUTH);  
-        pack();  
-        setVisible(true);  
-        start();  
-    }  
-    private void start() {  
-        ProGressWork work = new ProGressWork();  
-        work.addPropertyChangeListener(new PropertyChangeListener(){  
-            @Override  
-            public void propertyChange(PropertyChangeEvent evt) {  
-                System.out.print(evt.getNewValue());  
-            }  
-        });  
-        work.execute();  
-    }  
-    public static void main(String[] args) {  
-        SwingUtilities.invokeLater(new Runnable() {  
-            @Override  
-            public void run() {  
-                new testForSwing();  
-            }  
-        });  
-    }  
-      
-    class ProGressWork extends SwingWorker<List<Work>, Work> {  
-        @Override  
-        protected List<Work> doInBackground() throws Exception {  
-            int i = 0;  
-            List<Work> list = new ArrayList<Work>();  
-            //模拟耗时任务  
-            //假设有100项待完成任务  
-            while (i < 100) {  
-                i++;  
-                /*******模拟开始一项新工作*******/  
-                Work w = new Work(i);  
-                list.add(w);  
-                publish(w);  
-                setProgress(100 * list.size() / 100);  
-                Thread.sleep(1000);  
-                /*******模拟完成此项工作*******/  
-            }  
-            return list;  
-        }  
-        //调用publist的时候会调用  
-        //注意这里是"批处理"  
-        @Override  
-        protected void process(List<Work> works) {  
-            for (Work work : works) {  
-                bar.setValue(work.getId());  
-            }  
-        }  
-        @Override  
-        protected void done() {  
-            area.append("工作已全部完成");  
-        }  
-    }  
-    class Work {  
-        //工作编号  
-        private int id;  
-        public Work(int id) {  
-            this.id = id;  
-        }  
-        public int getId() {  
-            return id;  
-        }  
-    }  
-}  
+import javax.swing.*;
+
+import javax.swing.table.*;
+
+import java.awt.*;
+
+import java.awt.event.*;
+
+import java.util.*;
+
+public class testForSwing
+{
+
+	public testForSwing()
+	{
+
+		JFrame f = new JFrame();
+
+		Object[][] p =
+		{
+				{ "阿呆", new Integer(66), new Integer(32), new Integer(98), new Boolean(false), new Boolean(false) },
+
+				{ "阿呆", new Integer(82), new Integer(69), new Integer(128), new Boolean(true), new Boolean(false) }, };
+
+		String[] n =
+		{ "姓名", "语文", "数学", "总分", "及格", "作弊" };
+
+		JTable table = new JTable(p, n);
+
+		table.setPreferredScrollableViewportSize(new Dimension(550, 30));
+
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+
+		JScrollPane scrollPane = new JScrollPane(table);
+
+		f.getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+		f.setTitle("Simple Table");
+		f.pack();
+		f.show();
+		f.setVisible(true);
+
+		f.addWindowListener(
+
+				new WindowAdapter()
+				{
+
+					public void windowClosing(WindowEvent e)
+					{
+
+						System.exit(0);
+					}
+				});
+
+	}
+
+	public static void main(String[] args)
+	{
+
+		new testForSwing();
+	}
+
+}
