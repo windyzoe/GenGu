@@ -1,5 +1,6 @@
 package com.gengu.services;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,14 @@ public class MaterialInfoService
 	public String createMaterial(String strMaterial)
 	{
 		String strResult="OK";
-		new MaterialModelDao().createMaterial(strMaterial);
+		try
+		{
+			new MaterialModelDao().createMaterial(strMaterial);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			return "¥¥Ω®≤ƒ¡œ ß∞‹";
+		}
 		return strResult;
 	}
 	public String deleteMaterial(String strMaterial)
@@ -29,21 +37,49 @@ public class MaterialInfoService
 		map.put("InternalName",strMaterial+"_"+strModel);
 		map.put("Name",strModel);
 		map.put("Classification",strMaterial);
-		new MaterialModelDao().createModel(map);
+		try
+		{
+			new MaterialModelDao().createModel(map);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			return "¥¥Ω®≈∆∫≈ ß∞‹";
+		}
 		return strResult;
 	}
-	public String deleteModel(String strModel)
+	public String deleteModel(String strClass,List<String> modelList)
 	{
 		String strResult="OK";
-		
+		try
+		{
+			new MaterialModelDao().deleteModels(strClass, modelList);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			return "…æ≥˝≈∆∫≈ ß∞‹";
+		}
 		return strResult;
 	}
 	public List<String> getAllClassification()
 	{
-		return new MaterialModelDao().getAllClassification();
+		try
+		{
+			return new MaterialModelDao().getAllClassification();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 	public List<String> getModelsFromClassification(String strClass)
 	{
-		return new MaterialModelDao().getModelsFromClassification(strClass);
+		try
+		{
+			return new MaterialModelDao().getModelsFromClassification(strClass);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

@@ -10,7 +10,7 @@ import com.gengu.util.JdbcUtil;
 
 public class MaterialModelDao
 {
-	public void createMaterial(String strMaterial)
+	public void createMaterial(String strMaterial) throws SQLException
 	{
 		JdbcUtil jdbcUtil = new JdbcUtil();
 		jdbcUtil.getConnection();
@@ -24,13 +24,13 @@ public class MaterialModelDao
 			jdbcUtil.updateByPreparedStatement(strSQL, strValueList);
 		} catch (SQLException e)
 		{
-			e.printStackTrace();
+			throw e;
 		} finally
 		{
 			jdbcUtil.releaseConn();
 		}
 	}
-	public List<String> getAllClassification()
+	public List<String> getAllClassification() throws SQLException
 	{
 		JdbcUtil jdbcUtil = new JdbcUtil();
 		jdbcUtil.getConnection();
@@ -48,14 +48,14 @@ public class MaterialModelDao
 			}
 		} catch (SQLException e)
 		{
-			e.printStackTrace();
+			throw e;
 		} finally
 		{
 			jdbcUtil.releaseConn();
 		}
 		return strClassList;
 	}
-	public List<String> getModelsFromClassification(String strClass)
+	public List<String> getModelsFromClassification(String strClass) throws SQLException
 	{
 		List<String> strModels=new ArrayList<>();
 		JdbcUtil jdbcUtil = new JdbcUtil();
@@ -74,16 +74,15 @@ public class MaterialModelDao
 			}
 		} catch (SQLException e)
 		{
-			e.printStackTrace();
+			throw e;
 		} finally
 		{
 			jdbcUtil.releaseConn();
 		}
 		return strModels;
 	}
-	public void createModel(Map<String, Object> map)
+	public void createModel(Map<String, Object> map) throws SQLException
 	{
-		int size=map.size();
 		List<String> strNameList=new ArrayList<>();
 		List<Object> strValueList=new ArrayList<>();
 		for (Map.Entry<String, Object> entry : map.entrySet())
@@ -100,7 +99,31 @@ public class MaterialModelDao
 			jdbcUtil.updateByPreparedStatement(strSQL, strValueList);
 		} catch (SQLException e)
 		{
-			e.printStackTrace();
+			throw e;
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+	}
+	public void deleteModels(String strClass ,List<String> modelList) throws SQLException
+	{
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		String strSQL ="delete from MODEL where Name=? and Classification='"+strClass+"'";
+		List<List<?>> obList=new ArrayList<>();
+		for (String string : modelList)
+		{
+			List<Object> tempList=new ArrayList<>();
+			tempList.add(string);
+			obList.add(tempList);
+		}
+		try
+		{
+			jdbcUtil.updateManyByPreparedStatement(strSQL, obList);
+		} catch (SQLException e)
+		{
+			throw e;
+			
 		} finally
 		{
 			jdbcUtil.releaseConn();

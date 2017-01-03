@@ -231,7 +231,7 @@ public class MaterialInfoPanel extends JDialog
 			{
 				if (e.getStateChange() == ItemEvent.SELECTED)
 				{
-					System.out.println("aaa");
+					System.out.println("now combo Changed");
 					new MaterialInfoAction().comboxChangeAction(comboBox.getSelectedItem().toString());
 				}
 			}

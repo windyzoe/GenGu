@@ -121,6 +121,51 @@ public class JdbcUtil
 	}
 
 	/**
+	 * 批量更新操作
+	 * @param sql
+	 * 			带问号的SQL语句
+	 * @param paramList
+	 * 			这个是PreparedStatement里面的所有参数(二位数组)
+	 * @throws SQLException 
+	 */
+	public void updateManyByPreparedStatement(String sql, List<List<?>> paramList) throws SQLException
+	{
+		try
+		{
+			connection.setAutoCommit(false);//事务设计成不自动提交,因为是批处理,如果其中一步出错,则不提交
+			pstmt = connection.prepareStatement(sql);
+			for (int i = 0; i < paramList.size(); i++)
+			{
+				List<?> params = paramList.get(i);
+				int index = 1;
+				// 填充sql语句中的占位符
+				if (params != null && !params.isEmpty())
+				{
+					for (int j = 0; j < params.size(); j++)
+					{
+						pstmt.setObject(index++, params.get(i));
+					}
+					pstmt.addBatch();
+				}
+			}
+			pstmt.executeBatch();
+			connection.commit();// 执行完后，手动提交事务
+		} catch (SQLException e)
+		{
+			throw e;
+		}finally {
+			try
+			{
+				connection.setAutoCommit(true);// 最终,都要再把自动提交打开
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	/**
 	 * 执行查询操作
 	 * 
 	 * @param sql
