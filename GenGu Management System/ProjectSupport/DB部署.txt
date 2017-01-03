@@ -1,0 +1,10 @@
+创建数据库
+connect 'jdbc:derby:GenGuDB;create=true;dataEncryption=true;user=xushuo;password=xushuo;bootPassword=Aa123456';
+为DB owner添加权限
+call SYSCS_UTIL.SYSCS_CREATE_USER('xushuo','xushuo');
+进入数据库
+connect 'jdbc:derby:GenGuDB;user=xushuo;password=xushuo;bootPassword=Aa123456';
+设置数据库的设置不被系统设置覆盖
+CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.propertiesOnly','true');
+设置人员的权限
+call SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY( 'derby.database.fullAccessUsers','xushuo');

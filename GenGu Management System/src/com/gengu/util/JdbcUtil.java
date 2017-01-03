@@ -53,14 +53,14 @@ public class JdbcUtil
 	{
 		try
 		{
-			InputStream inStream= new FileInputStream(new File(Constants.PATH_JDBCProperty));
+			InputStream inStream = new FileInputStream(new File(Constants.PATH_JDBCProperty));
 			Properties prop = new Properties();
 			prop.load(inStream);
 			USERNAME = prop.getProperty("jdbc.username");
 			PASSWORD = prop.getProperty("jdbc.password");
 			DRIVER = prop.getProperty("jdbc.driver");
 			URL = prop.getProperty("jdbc.url");
-			System.out.println(USERNAME);
+			System.out.println("USERNAME: " + USERNAME);
 		} catch (Exception e)
 		{
 			throw new RuntimeException("读取数据库配置文件异常！", e);
@@ -82,7 +82,7 @@ public class JdbcUtil
 		try
 		{
 			Class.forName(DRIVER).newInstance(); // 注册驱动
-			String connectURL=URL+";user="+USERNAME+";password="+PASSWORD+";bootPassword=Aa123456";
+			String connectURL = URL + ";user=" + USERNAME + ";password=" + PASSWORD + ";bootPassword=Aa123456";
 			connection = DriverManager.getConnection(connectURL); // 获取连接
 		} catch (Exception e)
 		{
@@ -200,6 +200,7 @@ public class JdbcUtil
 		}
 		shutdownEngine();
 	}
+
 	/**
 	 * Derby断开连接的方式(此方式能完全断开,不需要用户名密码)
 	 */
@@ -221,7 +222,7 @@ public class JdbcUtil
 			}
 		}
 	}
-	
+
 	/**
 	 * Print a list of SQLExceptions.
 	 */
@@ -237,14 +238,15 @@ public class JdbcUtil
 			sqle = sqle.getNextException();
 		}
 	}
+
 	public static void main(String[] args)
 	{
 		JdbcUtil jdbcUtil = new JdbcUtil();
 		jdbcUtil.getConnection();
 		try
 		{
-			List<Map<String, Object>> result = jdbcUtil.findResult("select * from t_student", null);
-			for (Map<String, Object> m : result)
+			List<Map<String, Object>> maplist = jdbcUtil.findResult("select * from purchase", null);
+			for (Map<String, Object> m : maplist)
 			{
 				System.out.println(m);
 			}

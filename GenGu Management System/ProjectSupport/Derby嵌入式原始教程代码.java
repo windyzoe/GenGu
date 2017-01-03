@@ -1,20 +1,72 @@
 package com.gengu.test;
 
+// does not use derby.properties
+import java.io.PrintWriter;
 import java.sql.*;
-public class CreateDerbyDB
+import org.apache.derby.drda.NetworkServerControl;
+
+/*
+* <p>
+* This program showcases how SQL authorization is automatically turned
+* on when you run with NATIVE authentication. You can run this program
+* either embedded or client server.
+* </p>
+*
+* <p>
+* Here's how you compile the program:
+* </p>
+*
+* <pre>
+* javac -cp ${DERBY_LIB}/derbynet.jar NativeAuthenticationExample.java
+* </pre>
+*
+* <p>
+* Here's how you run the program embedded:
+* </p>
+*
+* <pre>
+* java -cp ${DERBY_LIB}/derby.jar:. NativeAuthenticationExample embedded
+* </pre>
+*
+* <p>
+* Here's how you run the program client/server:
+* </p>
+*
+* <pre>
+* java -cp \
+*
+${DERBY_LIB}/derby.jar:${DERBY_LIB}/derbynet.jar:${DERBY_LIB}/
+derbyclient.jar:. \
+* NativeAuthenticationExample client
+* </pre>
+*/
+public class testForJDBC
 {
 	/////////////////////////////////////////////////////////////////////
 	//
 	// CONSTANTS
 	//
 	/////////////////////////////////////////////////////////////////////
-	private static final String DB_NAME = "GenGuDB";
-	private static final String DB_OWNER = "xushuo";
-	private static final String DB_OWNER_PASSWORD = "xushuo";
-	private static final String READER = "guest";
-	private static final String READER_PASSWORD = "guest";
-	private static final String WRITER = "writer";
-	private static final String WRITER_PASSWORD = "writer";
+	private static final String DB_NAME = "nativeAuthDB";
+	// stored as SYSADM
+	private static final String DB_OWNER = "sysadm";
+	private static final String DB_OWNER_PASSWORD = "shh123ihtybb87m";
+	private static final String USER_WITHOUT_ROLE = "NOACC";
+	private static final String USER_WITHOUT_ROLE_PASSWORD = "ajaxj3x9";
+	private static final String READER = "GUEST";
+	private static final String READER_PASSWORD = "java5w6x";
+	private static final String WRITER = "SQLSAM";
+	private static final String WRITER_PASSWORD = "light8q9bulb";
+	private static final String EMBEDDED = "embedded";
+	private static final String CLIENT = "client";
+	/////////////////////////////////////////////////////////////////////
+	//
+	// STATE
+	//
+	/////////////////////////////////////////////////////////////////////
+	private boolean _runningEmbedded;
+	private NetworkServerControl _server;
+
 	/////////////////////////////////////////////////////////////////////
 	//
 	// ENTRY POINT
@@ -22,8 +74,33 @@ public class CreateDerbyDB
 	/////////////////////////////////////////////////////////////////////
 	public static void main(String... args)
 	{
-		CreateDerbyDB demo = new CreateDerbyDB(true);
-		demo.execute();
+		testForJDBC demo = parseArgs(args);
+		if (demo != null)
+		{
+			demo.execute();
+		} else
+		{
+			println("Bad command line args.");
+		}
+	}
+
+	private static testForJDBC parseArgs(String... args)
+	{
+		if ((args == null) || (args.length != 1))
+		{
+			return null;
+		}
+		String mode = args[0];
+		if (EMBEDDED.equals(mode))
+		{
+			return new testForJDBC(true);
+		} else if (CLIENT.equals(mode))
+		{
+			return new testForJDBC(false);
+		} else
+		{
+			return null;
+		}
 	}
 
 	/////////////////////////////////////////////////////////////////////
@@ -31,13 +108,14 @@ public class CreateDerbyDB
 	// CONSTRUCTOR
 	//
 	/////////////////////////////////////////////////////////////////////
-	private CreateDerbyDB(boolean runningEmbedded)
+	private testForJDBC(boolean runningEmbedded)
 	{
+		_runningEmbedded = runningEmbedded;
 	}
 
 	/////////////////////////////////////////////////////////////////////
 	//
-	// 创建主流程
+	// FEATURE SHOWCASE
 	//
 	/////////////////////////////////////////////////////////////////////
 	/**
@@ -47,19 +125,29 @@ public class CreateDerbyDB
 	{
 		try
 		{
-			//系统里设置一下用户名密码的记录存在DB里面
 			String authenticationProvider = "NATIVE:" + DB_NAME + ":LOCAL";
+			// this turns on NATIVE authentication as well as
+			// SQL authorization
 			println("Setting authentication provider to " + authenticationProvider);
 			System.setProperty("derby.authentication.provider", authenticationProvider);
-			//创建数据库(加密/用户名/密码/连接数据库的密码)
+			if (!_runningEmbedded)
+			{
+				startServer();
+			}
 			Connection dboConn = createDatabase();
-			//创建人员
 			createUsers(dboConn);
-			//设置数据库的设置不被系统设置覆盖
-			executeCommand(dboConn,"CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.propertiesOnly','true')");
-			//给人员相应权限
-			executeCommand(dboConn, "CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY( 'derby.database.fullAccessUsers','xushuo')");
+			createRoles(dboConn);
 			createTable(dboConn);
+			tryToConnectWithoutCredentials(); // should fail
+			// a valid user can connect even if they haven't been
+			// assigned any roles
+			getConnection(USER_WITHOUT_ROLE, USER_WITHOUT_ROLE_PASSWORD);
+			verifyReaderPrivileges();
+			verifyWriterPrivileges();
+			println("Using Database Owner connection again");
+			dropTable(dboConn);
+			dropRoles(dboConn);
+			dropUsers(dboConn);
 			cleanUpAndShutDown();
 		} catch (Exception e)
 		{
@@ -75,6 +163,7 @@ public class CreateDerbyDB
 	{
 		println("Storing some sample users in the database.");
 		PreparedStatement ps = prepare(conn, "call syscs_util.syscs_create_user( ?, ? )");
+		createUser(ps, USER_WITHOUT_ROLE, USER_WITHOUT_ROLE_PASSWORD);
 		createUser(ps, READER, READER_PASSWORD);
 		createUser(ps, WRITER, WRITER_PASSWORD);
 		ps.close();
@@ -87,8 +176,6 @@ public class CreateDerbyDB
 		ps.setString(2, password);
 		ps.execute();
 	}
-	
-	
 
 	/**
 	 * Create roles and grant them privileges.
@@ -96,10 +183,10 @@ public class CreateDerbyDB
 	private void createRoles(Connection conn) throws SQLException
 	{
 		println("Creating roles and granting privileges to them...");
-		executeCommand(conn, "CREATE ROLE adder");
-		executeCommand(conn, "CREATE ROLE viewer");
-		executeCommand(conn, "GRANT adder TO " + WRITER);
-		executeCommand(conn, "GRANT viewer TO " + READER);
+		execute(conn, "CREATE ROLE adder");
+		execute(conn, "CREATE ROLE viewer");
+		execute(conn, "GRANT adder TO " + WRITER);
+		execute(conn, "GRANT viewer TO " + READER);
 	}
 
 	/**
@@ -107,43 +194,23 @@ public class CreateDerbyDB
 	 */
 	private void createTable(Connection conn) throws SQLException
 	{
-		println("Creating table PURCHASE...");
-		executeCommand(conn, "CREATE TABLE PURCHASELIST(PurchaseID VARCHAR(20) NOT NULL,"
-				+ "CreateTime DATE,"
-				+ "OrderTime DATE,"
-				+ "Supplier VARCHAR(30),"
-				+ "Classification VARCHAR(30),"
-				+ "Model VARCHAR(30),"
-				+ "Factory VARCHAR(30),"
-				+ "UnitPrice DOUBLE,"
-				+ "BatchLot VARCHAR(30),"
-				+ "Quantity DOUBLE,"
-				+ "TotalPrice DOUBLE,"
-				+ "PickingAddress VARCHAR(200),"
-				+ "Distrabution VARCHAR(1),"
-				+ "Car VARCHAR(20),"
-				+ "TansCost INT,"
-				+ "PRIMARY KEY (PurchaseID))");
-		println("Creating table CLASSIFICATION...");
-		executeCommand(conn, "CREATE TABLE CLASSIFICATION(Name VARCHAR(30) NOT NULL,"
-				+ "PRIMARY KEY (Name))");
-		println("Creating table MODEL...");
-		executeCommand(conn, "CREATE TABLE MODEL(InternalName VARCHAR(30) NOT NULL,"
-				+ "Name VARCHAR(30),"
-				+ "Classification VARCHAR(30),"
-				+ "PRIMARY KEY (InternalName))");
-		println("Creating table FACTORY...");
-		executeCommand(conn, "CREATE TABLE FACTORY(Name VARCHAR(30) NOT NULL,"
-				+ "PRIMARY KEY (Name))");
+		println("Creating table accessibletbl...");
+		execute(conn, "CREATE TABLE accessibletbl(textcol VARCHAR(6))");
+		execute(conn, "INSERT INTO accessibletbl VALUES('hello')");
+		println("Granting select/insert privileges to adder...");
+		execute(conn, "GRANT SELECT, INSERT ON accessibletbl TO adder");
+		println("Granting select privileges to viewer");
+		execute(conn, "GRANT SELECT ON accessibletbl TO viewer");
 	}
 
 	/**
-	 * 删除某个人员对这个数据库的进入权限
+	 * Drop users except for Database Owner.
 	 */
 	public void dropUsers(Connection conn) throws SQLException
 	{
 		println("Dropping sample users from the database...");
 		PreparedStatement ps = prepare(conn, "call syscs_util.syscs_drop_user( ? )");
+		dropUser(ps, USER_WITHOUT_ROLE);
 		dropUser(ps, READER);
 		dropUser(ps, WRITER);
 		ps.close();
@@ -157,21 +224,21 @@ public class CreateDerbyDB
 	}
 
 	/**
-	 * 删除自定义角色
+	 * Drop roles.
 	 */
 	private void dropRoles(Connection conn) throws SQLException
 	{
 		println("Dropping roles...");
-		executeCommand(conn, "DROP ROLE adder");
-		executeCommand(conn, "DROP ROLE viewer");
+		execute(conn, "DROP ROLE adder");
+		execute(conn, "DROP ROLE viewer");
 	}
 
 	/**
-	 * 删除表单
+	 * Drop the table.
 	 */
 	private void dropTable(Connection conn) throws SQLException
 	{
-		executeCommand(conn, "DROP TABLE accessibletbl");
+		execute(conn, "DROP TABLE accessibletbl");
 	}
 
 	/**
@@ -204,7 +271,7 @@ public class CreateDerbyDB
 	{
 		Connection readerConn = getConnection(READER, READER_PASSWORD);
 		println("Setting role to VIEWER");
-		executeCommand(readerConn, "SET ROLE VIEWER");
+		execute(readerConn, "SET ROLE VIEWER");
 		readRow(readerConn); // should succeed
 		try
 		{
@@ -232,7 +299,7 @@ public class CreateDerbyDB
 		Connection writerConn = getConnection(WRITER, WRITER_PASSWORD);
 		// set role to ADDER
 		println("Setting role to ADDER");
-		executeCommand(writerConn, "SET ROLE ADDER");
+		execute(writerConn, "SET ROLE ADDER");
 		// should succeed
 		readRow(writerConn);
 		writeRow(writerConn);
@@ -268,12 +335,12 @@ public class CreateDerbyDB
 
 	private void writeRow(Connection conn) throws SQLException
 	{
-		executeCommand(conn, "INSERT INTO sysadm.accessibletbl VALUES('guest')");
+		execute(conn, "INSERT INTO sysadm.accessibletbl VALUES('guest')");
 	}
 
 	private void deleteRow(Connection conn) throws SQLException
 	{
-		executeCommand(conn, "DELETE FROM sysadm.accessibletbl");
+		execute(conn, "DELETE FROM sysadm.accessibletbl");
 	}
 
 	/////////////////////////////////////////////////////////////////////
@@ -284,7 +351,7 @@ public class CreateDerbyDB
 	/**
 	 * Execute a statement
 	 */
-	private void executeCommand(Connection conn, String text) throws SQLException
+	private void execute(Connection conn, String text) throws SQLException
 	{
 		PreparedStatement ps = prepare(conn, text);
 		ps.execute();
@@ -306,12 +373,11 @@ public class CreateDerbyDB
 	//
 	/////////////////////////////////////////////////////////////////////
 	/**
-	 * 创建数据库
-	 * 'jdbc:derby:GenGuDB;create=true;dataEncryption=true;user=xushuo;password=xushuo;bootPassword=Aa123456';
+	 * Create the database
 	 */
 	private Connection createDatabase() throws SQLException
 	{
-		String connectionURL = "jdbc:derby:GenGuDB;create=true;dataEncryption=true;user=xushuo;password=xushuo;bootPassword=Aa123456";
+		String connectionURL = getConnectionURL(DB_NAME, DB_OWNER, DB_OWNER_PASSWORD, true, false);
 		println("Creating database via this URL: " + connectionURL);
 		return DriverManager.getConnection(connectionURL);
 	}
@@ -321,7 +387,15 @@ public class CreateDerbyDB
 	 */
 	private void cleanUpAndShutDown() throws Exception
 	{
+		// Shut down the server before the engine. this is so that
+		// we can authenticate the shutdown credentials in the
+		// booted database.
+		if (_server != null)
+		{
+			stopServer();
+		}
 		// the engine should only be brought down locally
+		_runningEmbedded = true;
 		shutdownEngine();
 		System.exit(1);
 	}
@@ -357,7 +431,7 @@ public class CreateDerbyDB
 
 	private String getConnectionURL(String dbName, String userName, String password, boolean createDB, boolean shutdownDB)
 	{
-		String connectionURL = "jdbc:derby:";
+		String connectionURL = _runningEmbedded ? "jdbc:derby:" : "jdbc:derby://localhost:1527/";
 		if (dbName != null)
 		{
 			connectionURL = connectionURL + DB_NAME;
@@ -379,6 +453,34 @@ public class CreateDerbyDB
 			connectionURL = connectionURL + ";shutdown=true";
 		}
 		return connectionURL;
+	}
+
+	/////////////////////////////////////////////////////////////////////
+	//
+	// SERVER MANAGEMENT
+	//
+	/////////////////////////////////////////////////////////////////////
+	/**
+	 * Start the Derby server
+	 */
+	private void startServer() throws Exception
+	{
+		_server = new NetworkServerControl(DB_OWNER, DB_OWNER_PASSWORD);
+		println("Starting the Derby server...");
+		_server.start(new PrintWriter(System.out));
+		// pause to let the server come up
+		Thread.sleep(5000L);
+	}
+
+	/**
+	 * Shut down the Derby server
+	 */
+	private void stopServer() throws Exception
+	{
+		println("Stopping the Derby server...");
+		_server.shutdown();
+		// pause to let the server come down
+		Thread.sleep(5000L);
 	}
 
 	/////////////////////////////////////////////////////////////////////

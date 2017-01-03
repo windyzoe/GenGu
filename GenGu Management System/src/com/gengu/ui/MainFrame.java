@@ -17,59 +17,27 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.BorderLayout;
-import javax.swing.JTree;
-import javax.swing.BoxLayout;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.JTextArea;
 import javax.swing.JButton;
-import javax.swing.JRadioButton;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTable;
-import java.awt.GridLayout;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.JTextField;
-import com.jgoodies.forms.layout.FormLayout;
 import com.gengu.common.Constants;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JPopupMenu;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JInternalFrame;
-import javax.swing.JLayeredPane;
+import com.gengu.common.ConstantsDB;
+
 import javax.swing.ImageIcon;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JDesktopPane;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.JList;
 
 /**
- * 
+ * 主窗口的UI
  * @author XUZH
  *
  */
@@ -90,15 +58,16 @@ public class MainFrame
 	private JMenuItem jMIStorageInfo;
 	private JMenuItem jMIMaterialInfo;
 	private JMenuItem jMICarInfo;
-	private JMenuItem jMICreateInStorage;
-	private JMenuItem jMICreateOutStorage;
-	private JMenuItem jMICreatePurchase;
-	private JMenuItem jMICreateSale;
-	private JMenuItem jMIListProfit;
-	private JMenuItem jMIListTranPay;
-	private JMenuItem jMIStoragePay;
-	private JMenuItem jMIOtherPay;
+	private JButton jMICreateInStorage;
+	private JButton jMICreateOutStorage;
+	private JButton jMICreatePurchase;
+	private JButton jMICreateSale;
+	private JButton jMIListProfit;
+	private JButton jMIListTranPay;
+	private JButton jMIListtoragePay;
+	private JButton jMIListOtherPay;
 	private JButton jBEditInfo;
+	private JButton jBRefresgTab;
 
 	/**
 	 * Launch the application.
@@ -107,6 +76,7 @@ public class MainFrame
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 * @throws ClassNotFoundException
+	 * 
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
@@ -119,7 +89,7 @@ public class MainFrame
 				try
 				{
 					UIManager.setLookAndFeel(new SubstanceBusinessBlackSteelLookAndFeel());
-					MainFrame window = new MainFrame();
+					MainFrame window = getInstance();
 					window.frame.setVisible(true);
 				} catch (Exception e)
 				{
@@ -128,9 +98,23 @@ public class MainFrame
 			}
 		});
 	}
-
+	/**
+	 * 饿汉单例模式,线程安全
+	 */
+	private static final MainFrame single = new MainFrame();
+	/**
+	 * 单例模式
+	 * @return
+	 */
+	public static MainFrame getInstance()
+	{
+		return single;
+	}
 	/**
 	 * Create the application.
+	 * 由于需要windowsBuilder来做开发,先把构造器设置为public
+	 * 注意之后要改为private(单例模式)
+	 * @wbp.parser.entryPoint
 	 */
 	public MainFrame()
 	{
@@ -138,6 +122,7 @@ public class MainFrame
 		initializeComponent();
 		initTables();
 		initLayout();
+		addListeners();
 	}
 
 	/**
@@ -145,7 +130,6 @@ public class MainFrame
 	 */
 	private void initializeComponent()
 	{
-
 		jMenuFile = new JMenu("文件");
 		jMIOpen = new JMenuItem("打开");
 		jMenuSetting = new JMenu("设置");
@@ -157,23 +141,27 @@ public class MainFrame
 		jMIMaterialInfo = new JMenuItem("材料信息");
 		jMICarInfo = new JMenuItem("运输车号");
 		jMenuHelp = new JMenu("帮助");
-		jMICreateInStorage = new JMenuItem("入库记录");
-		jMICreateOutStorage = new JMenuItem("出库记录");
-		jMICreatePurchase = new JMenuItem("采购记录");
-		jMICreateSale = new JMenuItem("销售记录");
-		jMIListProfit = new JMenuItem("利润统计");
-		jMIListTranPay = new JMenuItem("运费统计");
-		jMIStoragePay = new JMenuItem("仓储费统计");
-		jMIOtherPay = new JMenuItem("其它费用统计");
+		jMICreateInStorage = new JButton("入库记录");
+		jMICreateOutStorage = new JButton("出库记录");
+		jMICreatePurchase = new JButton("采购记录");
+		jMICreateSale = new JButton("销售记录");
+		jMIListProfit = new JButton("利润统计");
+		jMIListTranPay = new JButton("运费统计");
+		jMIListtoragePay = new JButton("仓储费统计");
+		jMIListOtherPay = new JButton("其它费用统计");
 		jBEditInfo = new JButton("修改记录");
+		jBRefresgTab = new JButton("刷新页面");
 	}
 
+	/**
+	 * 初始化Frame
+	 */
 	private void initFrame()
 	{
 		// 获得当前屏幕分辨率
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame = new JFrame();
-		frame.setSize(800, 600);
+		frame.setSize(1280, 720);
 		// 将界面放在最中央
 		frame.setLocation((screenSize.width - frame.getWidth()) / 2, (screenSize.height - frame.getHeight()) / 2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -210,6 +198,7 @@ public class MainFrame
 		FlowLayout fl_panel = new FlowLayout(FlowLayout.LEFT, 5, 5);
 		panel.setLayout(fl_panel);
 		JToolBar toolBar = new JToolBar();
+		toolBar.setRollover(true);
 		panel.add(toolBar);
 		JToolBar toolBar_1 = new JToolBar();
 		panel.add(toolBar_1);
@@ -221,8 +210,8 @@ public class MainFrame
 		toolBar.add(jMICreateSale);
 		toolBar_1.add(jMIListProfit);
 		toolBar_1.add(jMIListTranPay);
-		toolBar_1.add(jMIStoragePay);
-		toolBar_1.add(jMIOtherPay);
+		toolBar_1.add(jMIListtoragePay);
+		toolBar_1.add(jMIListOtherPay);
 
 		// 可左右拉伸面板
 		JSplitPane splitPane = new JSplitPane();
@@ -239,6 +228,7 @@ public class MainFrame
 				TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panel_1.add(jBEditInfo);
+		panel_1.add(jBRefresgTab);
 
 		// 修饰右切换面板
 		jtp.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
@@ -255,17 +245,44 @@ public class MainFrame
 		scrollPane.setViewportView(table_1);
 	}
 
+	/**
+	 * 初始化列表页
+	 */
 	private void initTables()
 	{
-		String[] headers =
-		{ "采购单号", "录入日期", "订单日期", "供货单位", "类别", "牌号", "厂家", "单价", "数量", "总价", "批号", "提货地址", "是否配送", "物流/车号", "运输费用" };
-		DefaultTableModel model = new DefaultTableModel(null, headers)
+		DefaultTableModel model = new DefaultTableModel(null, ConstantsDB.PurchaseHead)
 		{
 			public boolean isCellEditable(int row, int column)
-			{    
+			{
 				return false;
 			}
 		};
 		table_1 = new JTable(model);
+	}
+
+	/**
+	 * 给组件加上事件
+	 */
+	private void addListeners()
+	{
+		//采购记录
+		jMICreatePurchase.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				CreatePurchaseOrderPanel dialog =CreatePurchaseOrderPanel.getInstance();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		jMIMaterialInfo.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				MaterialInfoPanel dialog =MaterialInfoPanel.getInstance();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
 	}
 }
