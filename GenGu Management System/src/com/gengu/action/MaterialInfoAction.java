@@ -34,20 +34,67 @@ public class MaterialInfoAction
 		{
 			showErrorMessage("材料名不为空!");
 		}
-		String strJudge = materialInfoService.createMaterial(strMaterial);
-		if (!strJudge.equals("OK"))
-		{
-			showErrorMessage("创建材料失败");
-		}
+		new SwingWorker<String, Void>(){
+
+			@Override
+			protected String doInBackground() throws Exception
+			{
+				String strJudge = materialInfoService.createMaterial(strMaterial);
+				return strJudge;
+			}
+			@Override
+			protected void done()
+			{
+				try
+				{
+					if (!get().equals("OK"))
+					{
+						showErrorMessage("创建材料失败");
+					}else {
+						refreshCombox();
+					}
+				} catch (InterruptedException | ExecutionException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			 
+		}.execute();
+
 	}
 
 	public void deleteMaterialAction()
 	{
-
-		String strMaterial = JOptionPane.showInputDialog(MaterialInfoPanel.getInstance(), "请输入材料名称", "材料输入", JOptionPane.DEFAULT_OPTION);
-		if (strMaterial.trim().equals(""))
+		String strCurrentClass = MaterialInfoPanel.getInstance().getComboBox().getSelectedItem().toString();
+		String strMessage="确认要删除'"+strCurrentClass+"'材料嘛?该材料包含的材料也会删除!";
+		int index = JOptionPane.showConfirmDialog(MaterialInfoPanel.getInstance(), strMessage, "删除材料确认", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		if (index==0)
 		{
-			showErrorMessage("材料名不为空!");
+			new SwingWorker<String, Void>(){
+
+				@Override
+				protected String doInBackground() throws Exception
+				{
+					String strJudge = materialInfoService.deleteMaterial(strCurrentClass);
+					return strJudge;
+				}
+				@Override
+				protected void done()
+				{
+					try
+					{
+						if (get()!="OK"){
+							showErrorMessage("删除材料失败");
+						}
+						else {
+							refreshCombox();
+						}
+					} catch (InterruptedException | ExecutionException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}.execute();
 		}
 	}
 
@@ -62,11 +109,31 @@ public class MaterialInfoAction
 		{
 			showErrorMessage("输入不为空!");
 		}
-		String strJudge = materialInfoService.createModel(strModel, strMaterial);
-		if (!strJudge.equals("OK"))
-		{
-			showErrorMessage("创建牌号失败");
-		}
+		new SwingWorker<String, Void>(){
+
+			@Override
+			protected String doInBackground() throws Exception
+			{
+				String strJudge = materialInfoService.createModel(strModel, strMaterial);
+				return strJudge;
+			}
+			@Override
+			protected void done()
+			{
+				try
+				{
+					if (!get().equals("OK"))
+					{
+						showErrorMessage("创建牌号失败");
+					}else {
+						refreshJlist();
+					}
+				} catch (InterruptedException | ExecutionException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}.execute();
 	}
 
 	public void deleteModelAction()
@@ -86,13 +153,34 @@ public class MaterialInfoAction
 		int index = JOptionPane.showConfirmDialog(MaterialInfoPanel.getInstance(), strMessge.toString(), "删除牌号确认", JOptionPane.YES_NO_OPTION, JOptionPane.DEFAULT_OPTION);
 		if (index==0)
 		{
-			String result= materialInfoService.deleteModel(strClass,modelList);
-			if (result.equals("OK"))
-			{
-				System.out.println("删除成功");
-			}else{
-				showErrorMessage("删除失败");
-			}
+			new SwingWorker<String, Void>(){
+
+				@Override
+				protected String doInBackground() throws Exception
+				{
+					String result= materialInfoService.deleteModel(strClass,modelList);
+					return result;
+				}
+				@Override
+				protected void done()
+				{
+					try
+					{
+						if (get().equals("OK"))
+						{
+							System.out.println("删除成功");
+							refreshJlist();
+						}else{
+							showErrorMessage("删除失败");
+						}
+					} catch (InterruptedException | ExecutionException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}.execute();
+			
+
 		}
 	}
 

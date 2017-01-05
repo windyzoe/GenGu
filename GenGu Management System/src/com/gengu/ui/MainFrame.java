@@ -158,12 +158,10 @@ public class MainFrame
 	 */
 	private void initFrame()
 	{
-		// 获得当前屏幕分辨率
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame = new JFrame();
 		frame.setSize(1280, 720);
 		// 将界面放在最中央
-		frame.setLocation((screenSize.width - frame.getWidth()) / 2, (screenSize.height - frame.getHeight()) / 2);
+		frame.setLocation((Constants.SCREEN_WIDTH - frame.getWidth()) / 2, (Constants.SCREEN_HEIGHT - frame.getHeight()) / 2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.setTitle("GenGu System");

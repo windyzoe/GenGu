@@ -27,9 +27,22 @@ public class MaterialInfoService
 	public String deleteMaterial(String strMaterial)
 	{
 		String strResult="OK";
-		
+		try
+		{
+			new MaterialModelDao().deleteMaterial(strMaterial);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			return "创建牌号失败";
+		}
 		return strResult;
 	}
+	/**
+	 * 创建牌号,创建的Map要和数据库对应
+	 * @param strModel
+	 * @param strMaterial
+	 * @return
+	 */
 	public String createModel(String strModel,String strMaterial)
 	{
 		String strResult="OK";

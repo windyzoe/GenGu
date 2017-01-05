@@ -94,6 +94,7 @@ public class MaterialInfoPanel extends JDialog
 
 	private void initPanel()
 	{
+		setModal(true);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		// 获得当前屏幕分辨率

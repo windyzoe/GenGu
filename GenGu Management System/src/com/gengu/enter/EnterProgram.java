@@ -13,6 +13,7 @@ import javax.swing.plaf.FontUIResource;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 
 import com.gengu.common.Constants;
+import com.gengu.ui.LoginFrame;
 import com.gengu.ui.MainFrame;
 import com.gengu.util.FontUtil;
 
@@ -23,11 +24,13 @@ import com.gengu.util.FontUtil;
  */
 public class EnterProgram
 {
+	static LoginFrame loginFrame;
 	
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		JDialog.setDefaultLookAndFeelDecorated(true);
 		// EDT中做UI的创建和更新
 		SwingUtilities.invokeLater(new Runnable()
 		{
@@ -36,6 +39,10 @@ public class EnterProgram
 				try
 				{
 					UIManager.setLookAndFeel(new SubstanceBusinessBlackSteelLookAndFeel());
+					loginFrame=new LoginFrame();
+					loginFrame.setVisible(true);//登陆界面是去窗口边界的,在登录界面显示以后再设置setDefaultLookAndFeelDecorated
+					JDialog.setDefaultLookAndFeelDecorated(true);
+					JFrame.setDefaultLookAndFeelDecorated(true);
 					MainFrame window = MainFrame.getInstance();
 					window.frame.setVisible(true);
 				} catch (Exception e)

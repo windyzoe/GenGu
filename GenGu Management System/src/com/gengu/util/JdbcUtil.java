@@ -143,7 +143,7 @@ public class JdbcUtil
 				{
 					for (int j = 0; j < params.size(); j++)
 					{
-						pstmt.setObject(index++, params.get(i));
+						pstmt.setObject(index++, params.get(j));
 					}
 					pstmt.addBatch();
 				}
@@ -152,15 +152,8 @@ public class JdbcUtil
 			connection.commit();// 执行完后，手动提交事务
 		} catch (SQLException e)
 		{
+			connection.rollback();
 			throw e;
-		}finally {
-			try
-			{
-				connection.setAutoCommit(true);// 最终,都要再把自动提交打开
-			} catch (SQLException e)
-			{
-				e.printStackTrace();
-			}
 		}
 
 	}
@@ -286,21 +279,13 @@ public class JdbcUtil
 
 	public static void main(String[] args)
 	{
-		JdbcUtil jdbcUtil = new JdbcUtil();
-		jdbcUtil.getConnection();
-		try
+		JdbcUtil jdbcUtil1 = new JdbcUtil();
+		JdbcUtil jdbcUtil2 = new JdbcUtil();
+		if (jdbcUtil1.getConnection()==jdbcUtil2.getConnection())
 		{
-			List<Map<String, Object>> maplist = jdbcUtil.findResult("select * from purchase", null);
-			for (Map<String, Object> m : maplist)
-			{
-				System.out.println(m);
-			}
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		} finally
-		{
-			jdbcUtil.releaseConn();
+			System.out.println("竟然一样");
+		}else {
+			System.out.println("确实不一样");
 		}
 	}
 

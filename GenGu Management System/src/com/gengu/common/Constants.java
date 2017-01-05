@@ -26,6 +26,7 @@ public class Constants
 	 * 亘古图标
 	 */
 	public final static String PATH_GenGuIcon = PATH_Image + File.separator + "GenGuIcon.png";
+	public final static String PATH_Login = PATH_Image + File.separator + "GenGuLogin.png";
 	/**
 	 * 字体大小
 	 */
