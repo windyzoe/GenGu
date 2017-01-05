@@ -44,7 +44,7 @@ public class EnterProgram
 					JDialog.setDefaultLookAndFeelDecorated(true);
 					JFrame.setDefaultLookAndFeelDecorated(true);
 					MainFrame window = MainFrame.getInstance();
-					window.frame.setVisible(true);
+					//window.frame.setVisible(true);
 				} catch (Exception e)
 				{
 					e.printStackTrace();

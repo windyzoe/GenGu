@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.gengu.action.LoginAction;
 import com.gengu.common.Constants;
 import com.sun.awt.AWTUtilities;
 import javax.swing.JLabel;
@@ -192,15 +193,7 @@ public class LoginFrame extends JFrame
 	{
 		this.addMouseListener(moveWindowListener);
 		this.addMouseMotionListener(moveWindowListener);
-		jbLogin.addActionListener(new ActionListener()
-		{
-			
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				// TODO Auto-generated method stub
-			}
-		});
+		jbLogin.addActionListener(new LoginAction(this));
 
 		jbCancel.addMouseListener(new MouseListener()
 		{
@@ -231,7 +224,15 @@ public class LoginFrame extends JFrame
 			}
 		});
 	}
-
+	public String getUserString()
+	{
+		return this.textField_1.getText();
+	}
+	public String getPassword()
+	{
+		
+		return String.valueOf(passwordField.getPassword());
+	}
 	private MouseAdapter moveWindowListener = new MouseAdapter()
 	{
 
