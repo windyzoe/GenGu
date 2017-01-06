@@ -40,6 +40,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
+/**
+ * 材料和牌号管理界面
+ * @author XUZH
+ *
+ */
 public class MaterialInfoPanel extends JDialog
 {
 	private JComboBox comboBox;
@@ -84,7 +89,7 @@ public class MaterialInfoPanel extends JDialog
 	/**
 	 * Create the dialog.
 	 */
-	public MaterialInfoPanel()
+	private MaterialInfoPanel()
 	{
 		initPanel();
 		initLayout();
@@ -97,10 +102,8 @@ public class MaterialInfoPanel extends JDialog
 		setModal(true);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
-		// 获得当前屏幕分辨率
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// 将界面放在最中央
-		this.setLocation((screenSize.width - this.getWidth()) / 2, (screenSize.height - this.getHeight()) / 2);
+		this.setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
 		this.setTitle("材料信息");
 	}
 

@@ -50,11 +50,14 @@ public class MainFrame
 	private JMenu jMenuFile;
 	private JMenu jMenuSetting;
 	private JMenu jMenuCustomer;
+	private JMenu jMenuSupplier;
 	private JMenu jMenuConfig;
 	private JMenu jMenuHelp;
 	private JMenuItem jMIOpen;
 	private JMenuItem jMICreateCustomer;
 	private JMenuItem jMIListCustomer;
+	private JMenuItem jMICreateSupplier;
+	private JMenuItem jMIListSupplier;
 	private JMenuItem jMIStorageInfo;
 	private JMenuItem jMIMaterialInfo;
 	private JMenuItem jMICarInfo;
@@ -68,6 +71,7 @@ public class MainFrame
 	private JButton jMIListOtherPay;
 	private JButton jBEditInfo;
 	private JButton jBRefresgTab;
+	
 
 	/**
 	 * Launch the application.
@@ -102,6 +106,7 @@ public class MainFrame
 	 * 饿汉单例模式,线程安全
 	 */
 	private static final MainFrame single = new MainFrame();
+
 	/**
 	 * 单例模式
 	 * @return
@@ -136,6 +141,9 @@ public class MainFrame
 		jMenuCustomer = new JMenu("客户");
 		jMICreateCustomer = new JMenuItem("新建客户");
 		jMIListCustomer = new JMenuItem("客户概览");
+		jMenuSupplier = new JMenu("供应商");
+		jMICreateSupplier = new JMenuItem("新建供应商");
+		jMIListSupplier = new JMenuItem("供应商概览");
 		jMenuConfig = new JMenu("配置");
 		jMIStorageInfo = new JMenuItem("仓库信息");
 		jMIMaterialInfo = new JMenuItem("材料信息");
@@ -163,7 +171,6 @@ public class MainFrame
 		// 将界面放在最中央
 		frame.setLocation((Constants.SCREEN_WIDTH - frame.getWidth()) / 2, (Constants.SCREEN_HEIGHT - frame.getHeight()) / 2);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		frame.setTitle("GenGu System");
 		frame.setIconImage(new ImageIcon(Constants.PATH_GenGuIcon).getImage());
 	}
@@ -179,6 +186,7 @@ public class MainFrame
 		menuBar.add(jMenuFile);
 		menuBar.add(jMenuSetting);
 		menuBar.add(jMenuCustomer);
+		menuBar.add(jMenuSupplier);
 		menuBar.add(jMenuConfig);
 		menuBar.add(jMenuHelp);
 
@@ -189,6 +197,8 @@ public class MainFrame
 		jMenuConfig.add(jMIStorageInfo);
 		jMenuConfig.add(jMIMaterialInfo);
 		jMenuConfig.add(jMICarInfo);
+		jMenuSupplier.add(jMIListSupplier);
+		jMenuSupplier.add(jMICreateSupplier);
 
 		// 工具条
 		JPanel panel = new JPanel();

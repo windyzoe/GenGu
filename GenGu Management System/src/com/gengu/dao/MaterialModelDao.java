@@ -32,6 +32,11 @@ public class MaterialModelDao
 		}
 	}
 
+	/**
+	 * 获得所有的类别
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<String> getAllClassification() throws SQLException
 	{
 		JdbcUtil jdbcUtil = new JdbcUtil();
@@ -58,6 +63,12 @@ public class MaterialModelDao
 		return strClassList;
 	}
 
+	/**
+	 * 获得一个类别下的所有的牌号
+	 * @param strClass
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<String> getModelsFromClassification(String strClass) throws SQLException
 	{
 		List<String> strModels = new ArrayList<>();
@@ -85,6 +96,11 @@ public class MaterialModelDao
 		return strModels;
 	}
 
+	/**
+	 * 创建一个牌号信息
+	 * @param map
+	 * @throws SQLException
+	 */
 	public void createModel(Map<String, Object> map) throws SQLException
 	{
 		List<String> strNameList = new ArrayList<>();

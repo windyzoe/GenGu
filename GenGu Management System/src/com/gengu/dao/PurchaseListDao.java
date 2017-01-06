@@ -41,31 +41,11 @@ public class PurchaseListDao
 	/**
 	 * 创建一行采购记录
 	 * @param map	列名+值
+	 * @throws SQLException 
 	 */
-	public static void createPurchaseList(Map<String, Object> map)
+	public static void createPurchaseList(Map<String, Object> map) throws SQLException
 	{
-		int size=map.size();
-		List<String> strNameList=new ArrayList<>();
-		List<Object> strValueList=new ArrayList<>();
-		for (Map.Entry<String, Object> entry : map.entrySet())
-		{
-			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-			strNameList.add(entry.getKey());
-			strValueList.add(entry.getValue());
-		}
-		String strSQL =DaoUtil.getInstance().getSQLString("insert into purchase", strNameList);
-		JdbcUtil jdbcUtil = new JdbcUtil();
-		jdbcUtil.getConnection();
-		try
-		{
-			jdbcUtil.updateByPreparedStatement(strSQL, strValueList);
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		} finally
-		{
-			jdbcUtil.releaseConn();
-		}
+		DaoUtil.getInstance().createOneTableLine("PURCHASELIST", map);
 	}
 	public static  void test(){
     	Map<String, Object> map=new HashMap<String, Object> ();
@@ -84,7 +64,14 @@ public class PurchaseListDao
     	map.put("PurchaseID", "aassd1");
     	map.put("CreateTime", "2016-10-11");
     	map.put("TotalPrice", "12");
-    	createPurchaseList(map);
+    	try
+		{
+			createPurchaseList(map);
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public static void main(String[] args){
 		test();

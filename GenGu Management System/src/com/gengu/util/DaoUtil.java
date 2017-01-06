@@ -1,6 +1,9 @@
 package com.gengu.util;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据库操作层面的工具类
@@ -56,5 +59,34 @@ public class DaoUtil
 		System.out.println(strSQL);
 		return strSQL.toString();
 	}
-
+	/**在一个表单创建一行的公共方法
+	 * @param strTableName
+	 * @param map
+	 * @return
+	 * @throws SQLException 
+	 */
+	public void createOneTableLine(String strTableName , Map<String, Object> map) throws SQLException
+	{
+		List<String> strNameList=new ArrayList<>();
+		List<Object> strValueList=new ArrayList<>();
+		for (Map.Entry<String, Object> entry : map.entrySet())
+		{
+			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+			strNameList.add(entry.getKey());
+			strValueList.add(entry.getValue());
+		}
+		String strSQL =getSQLString("insert into "+strTableName, strNameList);
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		try
+		{
+			jdbcUtil.updateByPreparedStatement(strSQL, strValueList);
+		} catch (SQLException e)
+		{
+			throw e;
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+	}
 }

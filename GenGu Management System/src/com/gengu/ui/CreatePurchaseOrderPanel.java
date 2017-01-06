@@ -156,7 +156,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 				OrderTime.setColumns(10);
 			}
 			{
-				JLabel label = new JLabel("\u4F9B\u8D27\u5355\u4F4D:");
+				JLabel label = new JLabel("\u4F9B\u5E94\u5546:");
 				panel_1.add(label);
 			}
 			{

@@ -22,6 +22,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -68,7 +70,7 @@ public class LoginFrame extends JFrame
 		initFrame();
 		initLayout();
 		addListeners();
-		AWTUtilities.setWindowOpaque(this, false);//关键,使得透明
+		AWTUtilities.setWindowOpaque(this, false);// 关键,使得透明
 	}
 
 	/**
@@ -78,6 +80,7 @@ public class LoginFrame extends JFrame
 	{
 		setUndecorated(true);
 		setBounds(100, 100, 500, 400);
+		this.setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
 		contentPane = new JPanel()
 		{
 			@Override
@@ -113,7 +116,6 @@ public class LoginFrame extends JFrame
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.anchor = GridBagConstraints.EAST;
 		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_panel_1.fill = GridBagConstraints.VERTICAL;
 		gbc_panel_1.gridx = 0;
 		gbc_panel_1.gridy = 1;
 		contentPane.add(panel_1, gbc_panel_1);
@@ -128,7 +130,7 @@ public class LoginFrame extends JFrame
 		flowLayout_2.setAlignment(FlowLayout.LEFT);
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 		gbc_panel_2.insets = new Insets(0, 0, 5, 5);
-		gbc_panel_2.fill = GridBagConstraints.BOTH;
+		gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel_2.gridx = 1;
 		gbc_panel_2.gridy = 1;
 		contentPane.add(panel_2, gbc_panel_2);
@@ -144,7 +146,6 @@ public class LoginFrame extends JFrame
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.anchor = GridBagConstraints.EAST;
 		gbc_panel.insets = new Insets(0, 0, 5, 5);
-		gbc_panel.fill = GridBagConstraints.VERTICAL;
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 2;
 		contentPane.add(panel, gbc_panel);
@@ -158,7 +159,7 @@ public class LoginFrame extends JFrame
 		flowLayout_3.setAlignment(FlowLayout.LEFT);
 		GridBagConstraints gbc_panel_3 = new GridBagConstraints();
 		gbc_panel_3.insets = new Insets(0, 0, 5, 5);
-		gbc_panel_3.fill = GridBagConstraints.BOTH;
+		gbc_panel_3.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel_3.gridx = 1;
 		gbc_panel_3.gridy = 2;
 		contentPane.add(panel_3, gbc_panel_3);
@@ -192,10 +193,19 @@ public class LoginFrame extends JFrame
 	private void addListeners()
 	{
 		this.addMouseListener(moveWindowListener);
-		this.addMouseMotionListener(moveWindowListener);
-		jbLogin.addActionListener(new LoginAction(this));
-
-		jbCancel.addMouseListener(new MouseListener()
+		this.addMouseMotionListener(moveWindowListener);//鼠标拖动事件
+		jbLogin.addActionListener(new LoginAction(this));//登录事件
+		passwordField.addKeyListener(new KeyAdapter()//回车登录事件
+		{
+			public void keyPressed(KeyEvent e)
+			{
+				if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				{
+					jbLogin.doClick();
+				}
+			}
+		});
+		jbCancel.addMouseListener(new MouseListener()//取消事件
 		{
 			@Override
 			public void mouseReleased(MouseEvent e)
@@ -224,15 +234,21 @@ public class LoginFrame extends JFrame
 			}
 		});
 	}
+
 	public String getUserString()
 	{
 		return this.textField_1.getText();
 	}
+
 	public String getPassword()
 	{
-		
+
 		return String.valueOf(passwordField.getPassword());
 	}
+
+	/**
+	 * 这个监听器是可以实现窗口鼠标拖动的 注意:addMouseListener&&addMouseMotionListener都要注册
+	 */
 	private MouseAdapter moveWindowListener = new MouseAdapter()
 	{
 
@@ -253,7 +269,7 @@ public class LoginFrame extends JFrame
 			Rectangle bounds = getBounds();
 			bounds.x += offsetX;
 			bounds.y += offsetY;
-			System.out.println(offsetX);
+			// System.out.println(offsetX);
 			setBounds(bounds);
 			lastPoint = point;
 		}

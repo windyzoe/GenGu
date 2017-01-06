@@ -39,6 +39,9 @@ public class JdbcUtil
 
 	// 定义查询返回的结果集合
 	private ResultSet resultSet;
+	
+	// 数据库的关闭路径(Derby)
+	private static final String SHUTDOWNURL="jdbc:derby:;shutdown=true";
 
 	static
 	{
@@ -56,11 +59,8 @@ public class JdbcUtil
 			InputStream inStream = new FileInputStream(new File(Constants.PATH_JDBCProperty));
 			Properties prop = new Properties();
 			prop.load(inStream);
-			USERNAME = prop.getProperty("jdbc.username");
-			PASSWORD = prop.getProperty("jdbc.password");
 			DRIVER = prop.getProperty("jdbc.driver");
 			URL = prop.getProperty("jdbc.url");
-			System.out.println("USERNAME: " + USERNAME);
 		} catch (Exception e)
 		{
 			throw new RuntimeException("读取数据库配置文件异常！", e);
@@ -73,6 +73,43 @@ public class JdbcUtil
 	}
 
 	/**
+	 * 判断用户名密码能否连接数据库
+	 * @param strUser
+	 * @param strPassword
+	 * @return
+	 */
+	public static boolean isUserTrue(String strUser, String strPassword)
+	{
+		Connection connection = null;
+		try
+		{
+			Class.forName(DRIVER).newInstance(); // 注册驱动
+			String connectURL = URL + ";user=" + strUser + ";password=" + strPassword + ";bootPassword=Aa123456";
+			connection = DriverManager.getConnection(connectURL); // 获取连接
+		} catch (Exception e)
+		{
+			return false;
+		} finally//判断用的所有最终都要释放掉
+		{
+			try
+			{
+				if (connection != null)
+				{
+					connection.close();
+				}
+				DriverManager.getConnection(SHUTDOWNURL);
+			} catch (SQLException se)
+			{
+				if (se.getSQLState().equals("XJ015"))
+				{
+					System.out.println("Derby engine shut down normally");
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * 获取数据库连接
 	 * 
 	 * @return 数据库连接
@@ -81,8 +118,10 @@ public class JdbcUtil
 	{
 		try
 		{
+			String strUser=System.getProperty("genguuser");
+			String strPassword=System.getProperty("gengupassword");
 			Class.forName(DRIVER).newInstance(); // 注册驱动
-			String connectURL = URL + ";user=" + USERNAME + ";password=" + PASSWORD + ";bootPassword=Aa123456";
+			String connectURL = URL + ";user=" + strUser + ";password=" + strPassword + ";bootPassword=Aa123456";
 			connection = DriverManager.getConnection(connectURL); // 获取连接
 		} catch (Exception e)
 		{
@@ -122,17 +161,18 @@ public class JdbcUtil
 
 	/**
 	 * 批量更新操作
+	 * 
 	 * @param sql
-	 * 			带问号的SQL语句
+	 *            带问号的SQL语句
 	 * @param paramList
-	 * 			这个是PreparedStatement里面的所有参数(二位数组)
-	 * @throws SQLException 
+	 *            这个是PreparedStatement里面的所有参数(二位数组)
+	 * @throws SQLException
 	 */
 	public void updateManyByPreparedStatement(String sql, List<List<?>> paramList) throws SQLException
 	{
 		try
 		{
-			connection.setAutoCommit(false);//事务设计成不自动提交,因为是批处理,如果其中一步出错,则不提交
+			connection.setAutoCommit(false);// 事务设计成不自动提交,因为是批处理,如果其中一步出错,则不提交
 			pstmt = connection.prepareStatement(sql);
 			for (int i = 0; i < paramList.size(); i++)
 			{
@@ -244,11 +284,9 @@ public class JdbcUtil
 	 */
 	private void shutdownEngine()
 	{
-		String shutdownURL = "jdbc:derby:;shutdown=true";
 		try
 		{
-			System.out.println("Shutting down engine via this URL: " + shutdownURL);
-			DriverManager.getConnection(shutdownURL);
+			DriverManager.getConnection(SHUTDOWNURL);
 		} catch (SQLException se)
 		{
 			if (se.getSQLState().equals("XJ015"))
@@ -281,10 +319,11 @@ public class JdbcUtil
 	{
 		JdbcUtil jdbcUtil1 = new JdbcUtil();
 		JdbcUtil jdbcUtil2 = new JdbcUtil();
-		if (jdbcUtil1.getConnection()==jdbcUtil2.getConnection())
+		if (jdbcUtil1.getConnection() == jdbcUtil2.getConnection())
 		{
 			System.out.println("竟然一样");
-		}else {
+		} else
+		{
 			System.out.println("确实不一样");
 		}
 	}
