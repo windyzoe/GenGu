@@ -12,28 +12,32 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.gengu.services.SupplierService;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class CreateSupplierPanel extends JDialog
 {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField textField_10;
-	private JTextField textField_11;
-	private JButton jbOK;
-	private JButton jbCancel;
+	private JTextField tfName;
+	private JTextField tfContactor;
+	private JTextField tfContactorPhone;
+	private JTextField tfWorkTime;
+	private JTextField tfWeekend;
+	private JTextField tfStoreAddress;
+	private JTextField tfStoreWorkTime;
+	private JTextField tfStorePhone;
+	private JTextField tfOverWork;
+	private JTextField tfBrand;
+	private JTextField tfClassification;
+	private JTextField tfModel;
+	private JButton		jbOK;
+	private JButton 	jbCancel;
 
 	/**
 	 * Launch the application.
@@ -54,7 +58,11 @@ public class CreateSupplierPanel extends JDialog
 	/**
 	 * Create the dialog.
 	 */
-	public CreateSupplierPanel()
+	public CreateSupplierPanel(){
+		initLayout();
+		addListeners();	
+	}
+	public void initLayout()
 	{
 		setBounds(100, 100, 450, 300);
 		setTitle("新建供应商");
@@ -72,45 +80,46 @@ public class CreateSupplierPanel extends JDialog
 				panel.add(label);
 			}
 			{
-				textField = new JTextField();
-				panel.add(textField);
-				textField.setColumns(10);
+				tfName = new JTextField();
+				panel.add(tfName);
+				tfName.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u8054\u7CFB\u4EBA:");
 				panel.add(label);
 			}
 			{
-				textField_1 = new JTextField();
-				panel.add(textField_1);
-				textField_1.setColumns(10);
+				tfContactor = new JTextField();
+				panel.add(tfContactor);
+				tfContactor.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u8054\u7CFB\u4EBA\u7535\u8BDD:");
 				panel.add(label);
 			}
 			{
-				textField_2 = new JTextField();
-				panel.add(textField_2);
-				textField_2.setColumns(10);
+				tfContactorPhone = new JTextField();
+				panel.add(tfContactorPhone);
+				tfContactorPhone.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u5DE5\u4F5C\u65F6\u95F4:");
 				panel.add(label);
 			}
 			{
-				textField_3 = new JTextField();
-				panel.add(textField_3);
-				textField_3.setColumns(10);
+				tfWorkTime = new JTextField();
+				panel.add(tfWorkTime);
+				tfWorkTime.setColumns(10);
+				
 			}
 			{
 				JLabel label = new JLabel("\u5468\u516D\u65E5\u662F\u5426\u4E0A\u73ED:");
 				panel.add(label);
 			}
 			{
-				textField_4 = new JTextField();
-				panel.add(textField_4);
-				textField_4.setColumns(10);
+				tfWeekend = new JTextField();
+				panel.add(tfWeekend);
+				tfWeekend.setColumns(10);
 			}
 		}
 		{
@@ -123,36 +132,36 @@ public class CreateSupplierPanel extends JDialog
 				panel.add(label);
 			}
 			{
-				textField_5 = new JTextField();
-				panel.add(textField_5);
-				textField_5.setColumns(10);
+				tfStoreAddress = new JTextField();
+				panel.add(tfStoreAddress);
+				tfStoreAddress.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u4ED3\u5E93\u5DE5\u4F5C\u65F6\u95F4:");
 				panel.add(label);
 			}
 			{
-				textField_6 = new JTextField();
-				panel.add(textField_6);
-				textField_6.setColumns(10);
+				tfStoreWorkTime = new JTextField();
+				panel.add(tfStoreWorkTime);
+				tfStoreWorkTime.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u4ED3\u5E93\u7535\u8BDD:");
 				panel.add(label);
 			}
 			{
-				textField_7 = new JTextField();
-				panel.add(textField_7);
-				textField_7.setColumns(10);
+				tfStorePhone = new JTextField();
+				panel.add(tfStorePhone);
+				tfStorePhone.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u52A0\u73ED\u8D39:");
 				panel.add(label);
 			}
 			{
-				textField_8 = new JTextField();
-				panel.add(textField_8);
-				textField_8.setColumns(10);
+				tfOverWork = new JTextField();
+				panel.add(tfOverWork);
+				tfOverWork.setColumns(10);
 			}
 		}
 		{
@@ -165,27 +174,27 @@ public class CreateSupplierPanel extends JDialog
 				panel.add(label);
 			}
 			{
-				textField_9 = new JTextField();
-				panel.add(textField_9);
-				textField_9.setColumns(10);
+				tfBrand = new JTextField();
+				panel.add(tfBrand);
+				tfBrand.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u7C7B\u522B:");
 				panel.add(label);
 			}
 			{
-				textField_10 = new JTextField();
-				panel.add(textField_10);
-				textField_10.setColumns(10);
+				tfClassification = new JTextField();
+				panel.add(tfClassification);
+				tfClassification.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u724C\u53F7:");
 				panel.add(label);
 			}
 			{
-				textField_11 = new JTextField();
-				panel.add(textField_11);
-				textField_11.setColumns(10);
+				tfModel = new JTextField();
+				panel.add(tfModel);
+				tfModel.setColumns(10);
 			}
 		}
 		{
@@ -208,12 +217,19 @@ public class CreateSupplierPanel extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				Boolean bl = SupplierService.getInstance().create(getInformation());
+				if (!bl)
+				{
+					JOptionPane.showMessageDialog(contentPanel, "创建供应商失败！", "WARNING", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 	}
 	private Map<String, Object> getInformation()
 	{
 		Map<String, Object> map=new HashMap<>();
+		String strName = tfName.getText();
+		map.put("Name", strName);
 		return map;
 	}
 }

@@ -248,8 +248,7 @@ public class MaterialInfoPanel extends JDialog
 			@Override
 			protected List<String> doInBackground() throws Exception
 			{
-				MaterialInfoService materialInfoService=new MaterialInfoService();
-				List<String> strClassesList = materialInfoService.getAllClassification();
+				List<String> strClassesList = MaterialInfoService.getInstance().getAllClassification();
 				return strClassesList;
 			}
 			@Override

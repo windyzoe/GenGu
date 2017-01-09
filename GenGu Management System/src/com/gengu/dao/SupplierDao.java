@@ -10,11 +10,27 @@ import com.gengu.util.JdbcUtil;
 
 public class SupplierDao
 {
+	/**
+	 * 饿汉单例模式,线程安全
+	 */
+	private static final SupplierDao single = new SupplierDao();
+
+	/**
+	 * 单例模式
+	 * @return
+	 */
+	public static SupplierDao getInstance()
+	{
+		return single;
+	}
+	private SupplierDao(){
+		
+	};
 	/**获得所有供应商的名称
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<String> getAllSupplierName() throws SQLException
+	public List<String> getAllNames() throws SQLException
 	{
 		JdbcUtil jdbcUtil = new JdbcUtil();
 		jdbcUtil.getConnection();
@@ -38,7 +54,11 @@ public class SupplierDao
 		}
 		return strSupplierNameList;
 	}
-	public static void create(Map<String, Object> map) throws SQLException
+	/**创建一个供应商
+	 * @param map
+	 * @throws SQLException
+	 */
+	public void create(Map<String, Object> map) throws SQLException
 	{
 		DaoUtil.getInstance().createOneTableLine("supplier", map);
 	}

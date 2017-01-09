@@ -21,7 +21,7 @@ public class MaterialInfoAction
 
 	public MaterialInfoAction()
 	{
-		materialInfoService = new MaterialInfoService();
+		materialInfoService = MaterialInfoService.getInstance();
 	}
 
 	/**

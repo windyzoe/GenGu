@@ -11,12 +11,29 @@ import com.gengu.dao.MaterialModelDao;
 
 public class MaterialInfoService
 {
+	private MaterialModelDao materialModelDao;
+	/**
+	 * 饿汉单例模式,线程安全
+	 */
+	private static final MaterialInfoService single = new MaterialInfoService();
+
+	/**
+	 * 单例模式
+	 * @return
+	 */
+	public static MaterialInfoService getInstance()
+	{
+		return single;
+	}
+	private MaterialInfoService(){
+		materialModelDao=MaterialModelDao.getInstance();
+	};
 	public String createMaterial(String strMaterial)
 	{
 		String strResult="OK";
 		try
 		{
-			new MaterialModelDao().createMaterial(strMaterial);
+			materialModelDao.createMaterial(strMaterial);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -29,7 +46,7 @@ public class MaterialInfoService
 		String strResult="OK";
 		try
 		{
-			new MaterialModelDao().deleteMaterial(strMaterial);
+			materialModelDao.deleteMaterial(strMaterial);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -52,7 +69,7 @@ public class MaterialInfoService
 		map.put("Classification",strMaterial);
 		try
 		{
-			new MaterialModelDao().createModel(map);
+			materialModelDao.createModel(map);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -65,7 +82,7 @@ public class MaterialInfoService
 		String strResult="OK";
 		try
 		{
-			new MaterialModelDao().deleteModels(strClass, modelList);
+			materialModelDao.deleteModels(strClass, modelList);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -77,7 +94,7 @@ public class MaterialInfoService
 	{
 		try
 		{
-			return new MaterialModelDao().getAllClassification();
+			return materialModelDao.getAllClassification();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -88,7 +105,7 @@ public class MaterialInfoService
 	{
 		try
 		{
-			return new MaterialModelDao().getModelsFromClassification(strClass);
+			return materialModelDao.getModelsFromClassification(strClass);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();

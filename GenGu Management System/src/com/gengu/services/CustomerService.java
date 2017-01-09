@@ -1,5 +1,7 @@
 package com.gengu.services;
 
+import com.gengu.dao.PurchaseListDao;
+
 /**
  * 客户业务类
  * @author XUZH
@@ -7,5 +9,21 @@ package com.gengu.services;
  */
 public class CustomerService
 {
+	/**
+	 * 饿汉单例模式,线程安全
+	 */
+	private static final CustomerService single = new CustomerService();
+
+	/**
+	 * 单例模式
+	 * @return
+	 */
+	public static CustomerService getInstance()
+	{
+		return single;
+	}
+	private CustomerService(){
+		
+	};
 
 }

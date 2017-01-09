@@ -6,11 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.gengu.ui.MainFrame;
 import com.gengu.util.DaoUtil;
 import com.gengu.util.JdbcUtil;
 
 public class MaterialModelDao
 {
+	/**
+	 * 饿汉单例模式,线程安全
+	 */
+	private static final MaterialModelDao single = new MaterialModelDao();
+
+	/**
+	 * 单例模式
+	 * @return
+	 */
+	public static MaterialModelDao getInstance()
+	{
+		return single;
+	}
+	private MaterialModelDao(){
+		
+	};
 	public void createMaterial(String strMaterial) throws SQLException
 	{
 		JdbcUtil jdbcUtil = new JdbcUtil();

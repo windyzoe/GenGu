@@ -17,6 +17,22 @@ import com.gengu.util.JdbcUtil;
  */
 public class PurchaseListDao
 {
+	/**
+	 * 饿汉单例模式,线程安全
+	 */
+	private static final PurchaseListDao single = new PurchaseListDao();
+
+	/**
+	 * 单例模式
+	 * @return
+	 */
+	public static PurchaseListDao getInstance()
+	{
+		return single;
+	}
+	private PurchaseListDao(){
+		
+	};
 	public static List<Map<String, Object>> getAllPurchaseList()
 	{
 		List<Map<String, Object>> maplist = null;
