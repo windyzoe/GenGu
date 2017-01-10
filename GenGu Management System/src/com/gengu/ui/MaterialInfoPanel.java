@@ -225,7 +225,7 @@ public class MaterialInfoPanel extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				new MaterialInfoAction().refreshAction();
+				new MaterialInfoAction().refreshAction(comboBox);
 			}
 		});
 		comboBox.addItemListener(new ItemListener()
@@ -243,31 +243,7 @@ public class MaterialInfoPanel extends JDialog
 	}
 	private void initInformation()
 	{
-		new SwingWorker<List<String>, Void>()
-		{
-			@Override
-			protected List<String> doInBackground() throws Exception
-			{
-				List<String> strClassesList = MaterialInfoService.getInstance().getAllClassification();
-				return strClassesList;
-			}
-			@Override
-			protected void done()
-			{
-				DefaultComboBoxModel boxModel = (DefaultComboBoxModel) comboBox.getModel();
-				try
-				{
-					List<String> strClassesList = get();
-					for (String string : strClassesList)
-					{
-						boxModel.addElement(string);
-					}
-				} catch (InterruptedException | ExecutionException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}.execute();
+		new MaterialInfoAction().refreshAction(this.comboBox);
 	}
 	public JComboBox getComboBox()
 	{

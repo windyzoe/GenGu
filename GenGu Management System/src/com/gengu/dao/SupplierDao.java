@@ -51,6 +51,7 @@ public class SupplierDao
 		} finally
 		{
 			jdbcUtil.releaseConn();
+			System.out.println("release supplier");
 		}
 		return strSupplierNameList;
 	}

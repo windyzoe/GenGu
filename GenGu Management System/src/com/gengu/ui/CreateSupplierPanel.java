@@ -13,6 +13,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.gengu.common.Constants;
+import com.gengu.dao.SupplierDao;
 import com.gengu.services.SupplierService;
 
 import javax.swing.BoxLayout;
@@ -54,7 +56,6 @@ public class CreateSupplierPanel extends JDialog
 			e.printStackTrace();
 		}
 	}
-
 	/**
 	 * Create the dialog.
 	 */
@@ -64,8 +65,10 @@ public class CreateSupplierPanel extends JDialog
 	}
 	public void initLayout()
 	{
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 993, 277);
 		setTitle("新建供应商");
+		setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
+		//
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -212,6 +215,7 @@ public class CreateSupplierPanel extends JDialog
 	}
 	private void addListeners()
 	{
+		CreateSupplierPanel dialog=this;
 		jbOK.addActionListener(new ActionListener()
 		{
 			@Override
@@ -221,6 +225,8 @@ public class CreateSupplierPanel extends JDialog
 				if (!bl)
 				{
 					JOptionPane.showMessageDialog(contentPanel, "创建供应商失败！", "WARNING", JOptionPane.WARNING_MESSAGE);
+				}else {
+					dialog.dispose();
 				}
 			}
 		});

@@ -41,7 +41,8 @@ public class JdbcUtil
 	private ResultSet resultSet;
 	
 	// 数据库的关闭路径(Derby)
-	private static final String SHUTDOWNURL="jdbc:derby:;shutdown=true";
+	private static final String SHUTDOWNURL="jdbc:derby:;shutdown=true;deregister=false";
+	//private static final String SHUTDOWNURL="jdbc:derby:;shutdown=true";
 
 	static
 	{
@@ -91,18 +92,14 @@ public class JdbcUtil
 			return false;
 		} finally//判断用的所有最终都要释放掉
 		{
-			try
+			if (connection != null)
 			{
-				if (connection != null)
+				try
 				{
 					connection.close();
-				}
-				DriverManager.getConnection(SHUTDOWNURL);
-			} catch (SQLException se)
-			{
-				if (se.getSQLState().equals("XJ015"))
+				} catch (SQLException e)
 				{
-					System.out.println("Derby engine shut down normally");
+					e.printStackTrace();
 				}
 			}
 		}
@@ -121,7 +118,7 @@ public class JdbcUtil
 			String strUser=System.getProperty("genguuser");
 			String strPassword=System.getProperty("gengupassword");
 			Class.forName(DRIVER).newInstance(); // 注册驱动
-			String connectURL = URL + ";user=" + strUser + ";password=" + strPassword + ";bootPassword=Aa123456";
+			String connectURL = URL + ";user=" + "xushuo" + ";password=" + "xushuo" + ";bootPassword=Aa123456";
 			connection = DriverManager.getConnection(connectURL); // 获取连接
 		} catch (Exception e)
 		{
@@ -276,11 +273,12 @@ public class JdbcUtil
 				printSQLException(e);
 			}
 		}
-		shutdownEngine();
+		//shutdownEngine();
 	}
 
 	/**
 	 * Derby断开连接的方式(此方式能完全断开,不需要用户名密码)
+	 * 注意:在并发是关闭会出问题
 	 */
 	private void shutdownEngine()
 	{
@@ -298,6 +296,7 @@ public class JdbcUtil
 			}
 		}
 	}
+
 
 	/**
 	 * Print a list of SQLExceptions.

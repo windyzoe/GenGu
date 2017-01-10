@@ -135,6 +135,8 @@ public class CreateDerbyDB
 		println("Creating table FACTORY...");
 		executeCommand(conn, "CREATE TABLE FACTORY(Name VARCHAR(30) NOT NULL,"
 				+ "PRIMARY KEY (Name))");
+		executeCommand(conn, "CREATE TABLE SUPPLIER(Name VARCHAR(30) NOT NULL,"
+				+ "PRIMARY KEY (Name))");
 	}
 
 	/**

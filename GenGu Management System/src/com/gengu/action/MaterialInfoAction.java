@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
@@ -51,7 +54,7 @@ public class MaterialInfoAction
 					{
 						showErrorMessage("创建材料失败");
 					}else {
-						refreshCombox();
+						refreshClass(MaterialInfoPanel.getInstance().getComboBox());
 					}
 				} catch (InterruptedException | ExecutionException e)
 				{
@@ -87,7 +90,7 @@ public class MaterialInfoAction
 							showErrorMessage("删除材料失败");
 						}
 						else {
-							refreshCombox();
+							refreshClass(MaterialInfoPanel.getInstance().getComboBox());
 						}
 					} catch (InterruptedException | ExecutionException e)
 					{
@@ -126,7 +129,7 @@ public class MaterialInfoAction
 					{
 						showErrorMessage("创建牌号失败");
 					}else {
-						refreshJlist();
+						refreshModel(MaterialInfoPanel.getInstance().getComboBox(),MaterialInfoPanel.getInstance().getJList());
 					}
 				} catch (InterruptedException | ExecutionException e)
 				{
@@ -169,7 +172,7 @@ public class MaterialInfoAction
 						if (get().equals("OK"))
 						{
 							System.out.println("删除成功");
-							refreshJlist();
+							refreshModel(MaterialInfoPanel.getInstance().getComboBox(),MaterialInfoPanel.getInstance().getJList());
 						}else{
 							showErrorMessage("删除失败");
 						}
@@ -189,15 +192,14 @@ public class MaterialInfoAction
 	 * 更新combobox之后,如果有改变,会自动的更新牌号列表
 	 * 因为给列表添加了监听器
 	 */
-	public void refreshAction()
+	public void refreshAction(JComboBox comboBox)
 	{
-		refreshCombox();
-		//refreshJlist();
+		refreshClass(comboBox);
 	}
 
 	public void comboxChangeAction(String strClass)
 	{
-		refreshJlist();
+		refreshModel(MaterialInfoPanel.getInstance().getComboBox(),MaterialInfoPanel.getInstance().getJList());
 	}
 
 	private void showErrorMessage(String strMes)
@@ -208,9 +210,9 @@ public class MaterialInfoAction
 	/**
 	 * 刷新牌号列表
 	 */
-	private void refreshJlist()
+	private void refreshModel(JComboBox classBox,JList modelList)
 	{
-		String strClasString = MaterialInfoPanel.getInstance().getComboBox().getSelectedItem().toString();
+		String strClasString = classBox.getSelectedItem().toString();
 		new SwingWorker<String[], Void>()
 		{
 
@@ -227,7 +229,7 @@ public class MaterialInfoAction
 			{
 				try
 				{
-					MaterialInfoPanel.getInstance().getJList().setListData(get());
+					modelList.setListData(get());
 				} catch (InterruptedException | ExecutionException e)
 				{
 					e.printStackTrace();
@@ -236,13 +238,48 @@ public class MaterialInfoAction
 
 		}.execute();
 	}
-
-	/**
-	 * 刷新combobox
-	 * 
+	/**用来刷新牌号
 	 * @param strClass
+	 * 	类别
+	 * @param modelBox
+	 * 	牌号
 	 */
-	private void refreshCombox()
+	public void refreshModel(String strClass ,JComboBox modelBox)
+	{
+		new SwingWorker<List<String>, Void>()
+		{
+			@Override
+			protected List<String> doInBackground() throws Exception
+			{
+				List<String> strlist = materialInfoService.getModelsFromClassification(strClass);
+				return strlist;
+			}
+
+			@Override
+			protected void done()
+			{
+				DefaultComboBoxModel boxModel = (DefaultComboBoxModel) modelBox.getModel();
+				try
+				{
+					boxModel.removeAllElements();
+					List<String> strClassesList = get();
+					for (String string : strClassesList)
+					{
+						boxModel.addElement(string);
+					}
+				} catch (InterruptedException | ExecutionException e)
+				{
+					e.printStackTrace();
+				}
+			}
+
+		}.execute();
+	}
+	/**刷新类别的下拉菜单
+	 * @param jComboBox
+	 * 	下拉菜单
+	 */
+	public void refreshClass(JComboBox jComboBox)
 	{
 		new SwingWorker<List<String>, Void>()
 		{
@@ -256,7 +293,7 @@ public class MaterialInfoAction
 			@Override
 			protected void done()
 			{
-				DefaultComboBoxModel boxModel = (DefaultComboBoxModel) MaterialInfoPanel.getInstance().getComboBox().getModel();
+				DefaultComboBoxModel boxModel = (DefaultComboBoxModel) jComboBox.getModel();
 				try
 				{
 					boxModel.removeAllElements();

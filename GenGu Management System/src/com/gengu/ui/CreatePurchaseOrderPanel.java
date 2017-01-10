@@ -4,7 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -13,13 +16,17 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.border.TitledBorder;
 
 import com.gengu.action.CreateAction;
+import com.gengu.action.MaterialInfoAction;
+import com.gengu.action.SupplierAction;
 import com.gengu.action.CreateAction.CreatePurchaseOrderActionListener;
 import com.gengu.common.Constants;
+import com.gengu.services.SupplierService;
 
 import javax.swing.JComboBox;
 
@@ -33,7 +40,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 	private JTextField Factory;
 	private JTextField BatchLot;
 	private JTextField OrderTime;
-	private JComboBox Company;
+	private JComboBox Supplier;
 	private JTextField PickingAddress;
 	private JComboBox Distrabution;
 	private JTextField Car;
@@ -54,29 +61,25 @@ public class CreatePurchaseOrderPanel extends JDialog
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * 饿汉单例模式,线程安全
-	 */
-	private static final CreatePurchaseOrderPanel single = new CreatePurchaseOrderPanel();
-
-	/**
-	 * 单例模式
-	 * 
-	 * @return
-	 */
-	public static CreatePurchaseOrderPanel getInstance()
-	{
-		return single;
-	}
 
 	/**
 	 * Create the dialog.
 	 */
 	public CreatePurchaseOrderPanel()
 	{
+		initLayout();
+		addListeners();
+		initInfos();
+	}
+
+	private void initLayout()
+	{
+		setModal(true);
 		setTitle("创建采购记录");
 		setIconImage(new ImageIcon(Constants.PATH_GenGuIcon).getImage());
 		setBounds(100, 100, 1000, 314);
+		setLocationRelativeTo(MaterialInfoPanel.getInstance());
+		//this.setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -160,8 +163,8 @@ public class CreatePurchaseOrderPanel extends JDialog
 				panel_1.add(label);
 			}
 			{
-				Company = new JComboBox();
-				panel_1.add(Company);
+				Supplier = new JComboBox();
+				panel_1.add(Supplier);
 			}
 		}
 		{
@@ -218,26 +221,53 @@ public class CreatePurchaseOrderPanel extends JDialog
 			}
 		}
 	}
-    /**
-     * @author XUZH
-     *	处理OK按钮事件
-     */
-    private class OkButtonActionListener implements ActionListener{
-        public void actionPerformed(ActionEvent e) {
-        	Map<String, String> map=new HashMap<String, String> ();
-        	map.put("Classification", Classification.getSelectedItem().toString());
-        	map.put("Model", Model.getSelectedItem().toString());
-        	map.put("UnitPrice", UnitPrice.getText());
-        	map.put("Quantity", Quantity.getText());
-        	map.put("Factory", Factory.getText());
-        	map.put("BatchLot", BatchLot.getText());
-        	map.put("OrderTime", OrderTime.getText());
-        	map.put("Company", Company.getSelectedItem().toString());
-        	map.put("PickingAddress", PickingAddress.getText());
-        	map.put("Distrabution", Distrabution.getSelectedItem().toString());
-        	map.put("Car", Car.getText());
-        	map.put("TansCost", TansCost.getText());
-        }
-    }
+
+	/**
+	 * @author XUZH 处理OK按钮事件
+	 */
+	private class OkButtonActionListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("Classification", Classification.getSelectedItem().toString());
+			map.put("Model", Model.getSelectedItem().toString());
+			map.put("UnitPrice", UnitPrice.getText());
+			map.put("Quantity", Quantity.getText());
+			map.put("Factory", Factory.getText());
+			map.put("BatchLot", BatchLot.getText());
+			map.put("OrderTime", OrderTime.getText());
+			map.put("Company", Supplier.getSelectedItem().toString());
+			map.put("PickingAddress", PickingAddress.getText());
+			map.put("Distrabution", Distrabution.getSelectedItem().toString());
+			map.put("Car", Car.getText());
+			map.put("TansCost", TansCost.getText());
+		}
+	}
+
+	private void addListeners()
+	{
+		Classification.addItemListener(new ItemListener()
+		{
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				if (e.getStateChange() == ItemEvent.SELECTED)
+				{
+					System.out.println("now combo Changed");
+					new MaterialInfoAction().refreshModel(Classification.getSelectedItem().toString(), Model);
+				}
+			}
+		});
+	}
+
+	/**
+	 * method to init combobox
+	 */
+	private void initInfos()
+	{
+		new MaterialInfoAction().refreshClass(Classification);
+		new SupplierAction().refreshSupplierNames(Supplier);
+
+	}
 }
-		

@@ -278,7 +278,7 @@ public class MainFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				CreatePurchaseOrderPanel dialog =CreatePurchaseOrderPanel.getInstance();
+				CreatePurchaseOrderPanel dialog =new CreatePurchaseOrderPanel();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
@@ -288,6 +288,17 @@ public class MainFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				MaterialInfoPanel dialog =MaterialInfoPanel.getInstance();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		jMICreateSupplier.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				CreateSupplierPanel dialog=new CreateSupplierPanel();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}

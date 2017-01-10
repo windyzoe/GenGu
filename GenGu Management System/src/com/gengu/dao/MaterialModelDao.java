@@ -76,6 +76,7 @@ public class MaterialModelDao
 		} finally
 		{
 			jdbcUtil.releaseConn();
+			System.out.println("release class");
 		}
 		return strClassList;
 	}
