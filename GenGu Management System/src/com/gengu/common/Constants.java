@@ -39,7 +39,7 @@ public class Constants
 	/**
 	 * 字体大小
 	 */
-	public final static int APPFONTSIZE = 12;
+	public final static int APPFONTSIZE = 14;
 	/**
 	 * 列表中的行数(用于分页)
 	 */

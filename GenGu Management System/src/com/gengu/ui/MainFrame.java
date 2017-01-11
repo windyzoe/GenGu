@@ -43,6 +43,7 @@ import java.awt.Color;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.BoxLayout;
 
 /**
  * 主窗口的UI
@@ -228,10 +229,9 @@ public class MainFrame
 		toolBar.add(jMICreateOutStorage);
 		toolBar.add(jMICreatePurchase);
 		toolBar.add(jMICreateSale);
-		toolBar_1.add(jMIListProfit);
-		toolBar_1.add(jMIListTranPay);
-		toolBar_1.add(jMIListtoragePay);
-		toolBar_1.add(jMIListOtherPay);
+		
+		toolBar_1.add(jBEditInfo);
+		toolBar_1.add(jBRefresgTab);
 
 		// 可左右拉伸面板
 		JSplitPane splitPane = new JSplitPane();
@@ -244,11 +244,13 @@ public class MainFrame
 		splitPane.setRightComponent(jTabbedPane);
 
 		// 修饰左面板,加入内容
-		panel_1.setBorder(new TitledBorder(new TitledBorder(new LineBorder(new Color(130, 135, 144)), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), "\u9009\u9879",
+		panel_1.setBorder(new TitledBorder(new TitledBorder(new LineBorder(new Color(130, 135, 144)), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), "统计",
 				TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		panel_1.add(jBEditInfo);
-		panel_1.add(jBRefresgTab);
+		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
+		panel_1.add(jMIListProfit);
+		panel_1.add(jMIListTranPay);
+		panel_1.add(jMIListtoragePay);
+		panel_1.add(jMIListOtherPay);
 
 		// 修饰右切换面板
 		jTabbedPane.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
