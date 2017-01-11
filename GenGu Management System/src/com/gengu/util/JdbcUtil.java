@@ -41,7 +41,7 @@ public class JdbcUtil
 	private ResultSet resultSet;
 	
 	// 数据库的关闭路径(Derby)
-	private static final String SHUTDOWNURL="jdbc:derby:;shutdown=true;deregister=false";
+	private static final String SHUTDOWNURL="jdbc:derby:;shutdown=true;";
 	//private static final String SHUTDOWNURL="jdbc:derby:;shutdown=true";
 
 	static
@@ -280,7 +280,7 @@ public class JdbcUtil
 	 * Derby断开连接的方式(此方式能完全断开,不需要用户名密码)
 	 * 注意:在并发是关闭会出问题
 	 */
-	private void shutdownEngine()
+	public static void shutdownEngine()
 	{
 		try
 		{
@@ -290,9 +290,6 @@ public class JdbcUtil
 			if (se.getSQLState().equals("XJ015"))
 			{
 				System.out.println("Derby engine shut down normally");
-			} else
-			{
-				printSQLException(se);
 			}
 		}
 	}

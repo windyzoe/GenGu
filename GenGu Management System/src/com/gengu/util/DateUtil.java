@@ -1,5 +1,8 @@
 package com.gengu.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * 处理日期工具类
  * @author XUZH
@@ -7,8 +10,8 @@ package com.gengu.util;
  */
 public class DateUtil
 {
-	private static final String DataType="yyyy-mm-dd";
-	private static final String TimeType="yyyy-mm-ddhh:mm:ss.f...";
+	private static final String DataType="yyyy-MM-dd";
+	private static final String TimeType="yyyy-MM-dd hh:mm:ss";
 	
 	/**
 	 * 饿汉单例模式,线程安全
@@ -27,6 +30,25 @@ public class DateUtil
 	 */
 	private DateUtil()
 	{
-		System.out.println("xxx");
+	}
+	/**当前日期
+	 * @return
+	 */
+	public String getNowDate()
+	{
+		String strNowDate="";
+		SimpleDateFormat sdf = new SimpleDateFormat(DataType);
+		strNowDate = sdf.format(new Date());
+		return strNowDate;
+	}
+	/**当前时间
+	 * @return
+	 */
+	public String getNowTime()
+	{
+		String strNowTime="";
+		SimpleDateFormat sdf = new SimpleDateFormat(TimeType);
+		strNowTime = sdf.format(new Date());
+		return strNowTime;
 	}
 }

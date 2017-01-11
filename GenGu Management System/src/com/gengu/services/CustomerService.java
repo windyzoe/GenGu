@@ -1,6 +1,6 @@
 package com.gengu.services;
 
-import com.gengu.dao.PurchaseListDao;
+import com.gengu.dao.PurchaseDao;
 
 /**
  * 客户业务类

@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.BoxLayout;
@@ -26,7 +29,9 @@ import com.gengu.action.MaterialInfoAction;
 import com.gengu.action.SupplierAction;
 import com.gengu.action.CreateAction.CreatePurchaseOrderActionListener;
 import com.gengu.common.Constants;
+import com.gengu.services.PurchaseService;
 import com.gengu.services.SupplierService;
+import com.gengu.util.DateUtil;
 
 import javax.swing.JComboBox;
 
@@ -45,6 +50,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 	private JComboBox Distrabution;
 	private JTextField Car;
 	private JTextField TansCost;
+	private	JButton okButton;
 
 	/**
 	 * Launch the application.
@@ -107,7 +113,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 				panel.add(Model);
 			}
 			{
-				JLabel label = new JLabel("\u5355\u4EF7:");
+				JLabel label = new JLabel("\u5355\u4EF7(\u5143):");
 				panel.add(label);
 			}
 			{
@@ -214,39 +220,44 @@ public class CreatePurchaseOrderPanel extends JDialog
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				okButton = new JButton("OK");
 				buttonPane.add(okButton);
-				okButton.addActionListener(new OkButtonActionListener());
 				getRootPane().setDefaultButton(okButton);
 			}
 		}
 	}
 
-	/**
-	 * @author XUZH 处理OK按钮事件
-	 */
-	private class OkButtonActionListener implements ActionListener
+	private Map<String, Object> checkAndMap()throws Exception
 	{
-		public void actionPerformed(ActionEvent e)
+		Map<String, Object> map=new HashMap<>();
+		double quantity,unitprice,totalprice;
+		try
 		{
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("Classification", Classification.getSelectedItem().toString());
-			map.put("Model", Model.getSelectedItem().toString());
-			map.put("UnitPrice", UnitPrice.getText());
-			map.put("Quantity", Quantity.getText());
-			map.put("Factory", Factory.getText());
-			map.put("BatchLot", BatchLot.getText());
-			map.put("OrderTime", OrderTime.getText());
-			map.put("Company", Supplier.getSelectedItem().toString());
-			map.put("PickingAddress", PickingAddress.getText());
-			map.put("Distrabution", Distrabution.getSelectedItem().toString());
-			map.put("Car", Car.getText());
-			map.put("TansCost", TansCost.getText());
+			quantity = Double.valueOf(Quantity.getText());
+			unitprice = Double.valueOf(UnitPrice.getText());
+		} catch (NumberFormatException e)
+		{
+			throw e;
 		}
+		map.put("Classification", Classification.getSelectedItem().toString());
+		map.put("Model", Model.getSelectedItem().toString());
+		map.put("UnitPrice", unitprice);
+		map.put("Quantity", quantity);
+		map.put("TotalPrice", unitprice*quantity);
+		map.put("Factory", Factory.getText());
+		map.put("BatchLot", BatchLot.getText());
+		map.put("OrderTime", OrderTime.getText());
+		map.put("Supplier", Supplier.getSelectedItem().toString());
+		map.put("PickingAddress", PickingAddress.getText());
+		map.put("Distrabution", Distrabution.getSelectedItem().toString());
+		map.put("Car", Car.getText());
+		map.put("TansCost", TansCost.getText());
+		map.put("CreateTime", DateUtil.getInstance().getNowTime());
+		return map;
 	}
-
 	private void addListeners()
 	{
+		CreatePurchaseOrderPanel createPurchaseOrderPanel=this;
 		Classification.addItemListener(new ItemListener()
 		{
 			@Override
@@ -259,15 +270,42 @@ public class CreatePurchaseOrderPanel extends JDialog
 				}
 			}
 		});
+		okButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				Map<String, Object> map=new HashMap<>();
+				try
+				{
+					map =checkAndMap();
+				} catch (Exception e1)
+				{
+					JOptionPane.showMessageDialog(createPurchaseOrderPanel, "输入错误,请检查输入!", "ERROR", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				try
+				{
+					PurchaseService.getInstance().createPurchaseList(map);
+				} catch (SQLException e1)
+				{
+					JOptionPane.showMessageDialog(createPurchaseOrderPanel, "创建失败,请检查输入!", "ERROR", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+				}
+				createPurchaseOrderPanel.dispose();
+			}
+		});
 	}
 
 	/**
-	 * method to init combobox
+	 * init data
 	 */
 	private void initInfos()
 	{
-		new MaterialInfoAction().refreshClass(Classification);
-		new SupplierAction().refreshSupplierNames(Supplier);
-
+		new MaterialInfoAction().refreshClass(Classification);//初始化分类
+		new SupplierAction().refreshSupplierNames(Supplier);//初始化供应商
+		OrderTime.setText(DateUtil.getInstance().getNowDate());//初始化订单日期(可修改)
+		Distrabution.addItem("是");//是否配送
+		Distrabution.addItem("否");//是否配送
 	}
 }

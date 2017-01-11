@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.apache.derby.impl.sql.catalog.SYSTABLEPERMSRowFactory;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 
@@ -25,19 +26,27 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import com.gengu.common.Constants;
 import com.gengu.common.ConstantsDB;
+import com.gengu.controller.TableController;
+import com.gengu.util.JdbcUtil;
 
 import javax.swing.ImageIcon;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
  * 主窗口的UI
+ * 
  * @author XUZH
  *
  */
@@ -45,7 +54,7 @@ public class MainFrame
 {
 	// 声明需要外部类刷新的组件
 	public JFrame frame;
-	public JTable table_1;
+	public JTable purchaseTable;
 	// 声明内部组件
 	private JMenu jMenuFile;
 	private JMenu jMenuSetting;
@@ -71,7 +80,7 @@ public class MainFrame
 	private JButton jMIListOtherPay;
 	private JButton jBEditInfo;
 	private JButton jBRefresgTab;
-	
+	private JTabbedPane jTabbedPane;
 
 	/**
 	 * Launch the application.
@@ -102,6 +111,7 @@ public class MainFrame
 			}
 		});
 	}
+
 	/**
 	 * 饿汉单例模式,线程安全
 	 */
@@ -109,16 +119,18 @@ public class MainFrame
 
 	/**
 	 * 单例模式
+	 * 
 	 * @return
 	 */
 	public static MainFrame getInstance()
 	{
 		return single;
 	}
+
 	/**
-	 * Create the application.
-	 * 由于需要windowsBuilder来做开发,先把构造器设置为public
+	 * Create the application. 由于需要windowsBuilder来做开发,先把构造器设置为public
 	 * 注意之后要改为private(单例模式)
+	 * 
 	 * @wbp.parser.entryPoint
 	 */
 	public MainFrame()
@@ -170,7 +182,7 @@ public class MainFrame
 		frame.setSize(1280, 720);
 		// 将界面放在最中央
 		frame.setLocation((Constants.SCREEN_WIDTH - frame.getWidth()) / 2, (Constants.SCREEN_HEIGHT - frame.getHeight()) / 2);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setTitle("GenGu System");
 		frame.setIconImage(new ImageIcon(Constants.PATH_GenGuIcon).getImage());
 	}
@@ -228,8 +240,8 @@ public class MainFrame
 		// 可左右拉伸面板加入选项面板和可切换面板
 		JPanel panel_1 = new JPanel();
 		splitPane.setLeftComponent(panel_1);
-		JTabbedPane jtp = new JTabbedPane();
-		splitPane.setRightComponent(jtp);
+		jTabbedPane = new JTabbedPane();
+		splitPane.setRightComponent(jTabbedPane);
 
 		// 修饰左面板,加入内容
 		panel_1.setBorder(new TitledBorder(new TitledBorder(new LineBorder(new Color(130, 135, 144)), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), "\u9009\u9879",
@@ -239,18 +251,18 @@ public class MainFrame
 		panel_1.add(jBRefresgTab);
 
 		// 修饰右切换面板
-		jtp.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+		jTabbedPane.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
 
 		// 加入tab页
 		JScrollPane scrollPane = new JScrollPane();
 		JScrollPane scrollPane1 = new JScrollPane();
 		JScrollPane scrollPane2 = new JScrollPane();
-		jtp.addTab("采购", null, scrollPane, null);
-		jtp.addTab("销售", null, scrollPane1, null);
-		jtp.addTab("出入库", null, scrollPane2, null);
+		jTabbedPane.addTab("采购", null, scrollPane, null);
+		jTabbedPane.addTab("销售", null, scrollPane1, null);
+		jTabbedPane.addTab("出入库", null, scrollPane2, null);
 
 		// 加入列表
-		scrollPane.setViewportView(table_1);
+		scrollPane.setViewportView(purchaseTable);
 	}
 
 	/**
@@ -265,7 +277,10 @@ public class MainFrame
 				return false;
 			}
 		};
-		table_1 = new JTable(model);
+		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();// 设置table内容居中
+		tcr.setHorizontalAlignment(SwingConstants.CENTER);
+		purchaseTable = new JTable(model);
+		purchaseTable.setDefaultRenderer(Object.class, tcr);
 	}
 
 	/**
@@ -273,12 +288,12 @@ public class MainFrame
 	 */
 	private void addListeners()
 	{
-		//采购记录
+		// 采购记录
 		jMICreatePurchase.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				CreatePurchaseOrderPanel dialog =new CreatePurchaseOrderPanel();
+				CreatePurchaseOrderPanel dialog = new CreatePurchaseOrderPanel();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
@@ -287,21 +302,42 @@ public class MainFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				MaterialInfoPanel dialog =MaterialInfoPanel.getInstance();
+				MaterialInfoPanel dialog = MaterialInfoPanel.getInstance();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
 		});
 		jMICreateSupplier.addActionListener(new ActionListener()
 		{
-			
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				CreateSupplierPanel dialog=new CreateSupplierPanel();
+				CreateSupplierPanel dialog = new CreateSupplierPanel();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
 		});
+		jBRefresgTab.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new TableController().refreshAction();
+			}
+		});
+		frame.addWindowListener(new WindowAdapter()
+		{
+			public void windowClosing(WindowEvent e) 
+			{
+				JdbcUtil.shutdownEngine();
+				System.exit(0);
+			}
+		});
+	}
+
+	public JTabbedPane getTabPane()
+	{
+		return this.jTabbedPane;
 	}
 }
