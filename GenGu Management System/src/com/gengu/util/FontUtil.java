@@ -42,7 +42,7 @@ public class FontUtil
 	 */
 	public static Font getBaseFont(int fontSize)
 	{
-		return new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, fontSize);
+		return new Font("ºÚÌå", Font.PLAIN, fontSize);
 	}
 
 }

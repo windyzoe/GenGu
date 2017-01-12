@@ -19,6 +19,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Image;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -26,6 +29,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import com.gengu.common.Constants;
 import com.gengu.common.ConstantsDB;
+import com.gengu.component.CustomIcon;
+import com.gengu.component.PagingPanel;
 import com.gengu.controller.TableController;
 import com.gengu.util.JdbcUtil;
 
@@ -36,6 +41,8 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
@@ -44,6 +51,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.BoxLayout;
+import java.awt.Component;
+import javax.swing.JLabel;
+import javax.swing.JFormattedTextField;
+import javax.swing.Box;
+import javax.swing.JToggleButton;
 
 /**
  * 主窗口的UI
@@ -71,17 +83,19 @@ public class MainFrame
 	private JMenuItem jMIStorageInfo;
 	private JMenuItem jMIMaterialInfo;
 	private JMenuItem jMICarInfo;
-	private JButton jMICreateInStorage;
-	private JButton jMICreateOutStorage;
-	private JButton jMICreatePurchase;
-	private JButton jMICreateSale;
-	private JButton jMIListProfit;
-	private JButton jMIListTranPay;
-	private JButton jMIListtoragePay;
-	private JButton jMIListOtherPay;
+	private JButton jBCreateInStorage;
+	private JButton jBCreateOutStorage;
+	private JButton jBCreatePurchase;
+	private JButton jBCreateSale;
+	private JButton jBListProfit;
+	private JButton jBListTranPay;
+	private JButton jBListtoragePay;
+	private JButton jBListOtherPay;
 	private JButton jBEditInfo;
 	private JButton jBRefresgTab;
+	private JButton jBDelete;
 	private JTabbedPane jTabbedPane;
+	private PagingPanel pagingPanel;
 
 	/**
 	 * Launch the application.
@@ -117,6 +131,7 @@ public class MainFrame
 	 * 饿汉单例模式,线程安全
 	 */
 	private static final MainFrame single = new MainFrame();
+	
 
 	/**
 	 * 单例模式
@@ -162,16 +177,6 @@ public class MainFrame
 		jMIMaterialInfo = new JMenuItem("材料信息");
 		jMICarInfo = new JMenuItem("运输车号");
 		jMenuHelp = new JMenu("帮助");
-		jMICreateInStorage = new JButton("入库记录");
-		jMICreateOutStorage = new JButton("出库记录");
-		jMICreatePurchase = new JButton("采购记录");
-		jMICreateSale = new JButton("销售记录");
-		jMIListProfit = new JButton("利润统计");
-		jMIListTranPay = new JButton("运费统计");
-		jMIListtoragePay = new JButton("仓储费统计");
-		jMIListOtherPay = new JButton("其它费用统计");
-		jBEditInfo = new JButton("修改记录");
-		jBRefresgTab = new JButton("刷新页面");
 	}
 
 	/**
@@ -213,44 +218,15 @@ public class MainFrame
 		jMenuSupplier.add(jMIListSupplier);
 		jMenuSupplier.add(jMICreateSupplier);
 
-		// 工具条
+		// 表格面板
 		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.NORTH);
-		FlowLayout fl_panel = new FlowLayout(FlowLayout.LEFT, 5, 5);
-		panel.setLayout(fl_panel);
-		JToolBar toolBar = new JToolBar();
-		toolBar.setRollover(true);
-		panel.add(toolBar);
-		JToolBar toolBar_1 = new JToolBar();
-		panel.add(toolBar_1);
-
-		// 工具条命令
-		toolBar.add(jMICreateInStorage);
-		toolBar.add(jMICreateOutStorage);
-		toolBar.add(jMICreatePurchase);
-		toolBar.add(jMICreateSale);
-		
-		toolBar_1.add(jBEditInfo);
-		toolBar_1.add(jBRefresgTab);
-
-		// 可左右拉伸面板
-		JSplitPane splitPane = new JSplitPane();
-		frame.getContentPane().add(splitPane, BorderLayout.CENTER);
-
-		// 可左右拉伸面板加入选项面板和可切换面板
-		JPanel panel_1 = new JPanel();
-		splitPane.setLeftComponent(panel_1);
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		panel.setLayout(new BorderLayout(0, 0));
 		jTabbedPane = new JTabbedPane();
-		splitPane.setRightComponent(jTabbedPane);
-
-		// 修饰左面板,加入内容
-		panel_1.setBorder(new TitledBorder(new TitledBorder(new LineBorder(new Color(130, 135, 144)), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), "统计",
-				TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
-		panel_1.add(jMIListProfit);
-		panel_1.add(jMIListTranPay);
-		panel_1.add(jMIListtoragePay);
-		panel_1.add(jMIListOtherPay);
+		panel.add(jTabbedPane, BorderLayout.CENTER);
+		pagingPanel=new PagingPanel();
+		pagingPanel.setPanel(1000);
+		panel.add(pagingPanel, BorderLayout.SOUTH);
 
 		// 修饰右切换面板
 		jTabbedPane.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
@@ -265,6 +241,52 @@ public class MainFrame
 
 		// 加入列表
 		scrollPane.setViewportView(purchaseTable);
+
+		// 可左右拉伸面板加入选项面板和可切换面板
+		JPanel panel_1 = new JPanel();
+		frame.getContentPane().add(panel_1, BorderLayout.WEST);
+
+		// 修饰左面板,加入内容
+		panel_1.setBorder(new TitledBorder(new TitledBorder(new LineBorder(new Color(130, 135, 144)), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), "统计", TitledBorder.CENTER,
+				TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
+
+		jBListProfit = new JButton("利润统计");
+		panel_1.add(jBListProfit);
+		jBListTranPay = new JButton("运费统计");
+		panel_1.add(jBListTranPay);
+		jBListtoragePay = new JButton("仓储费统计");
+		panel_1.add(jBListtoragePay);
+		jBListOtherPay = new JButton("其它统计");
+		panel_1.add(jBListOtherPay);
+		jBCreateInStorage = new JButton("入库记录");
+		jBCreateInStorage.setIcon(new CustomIcon(Constants.PATH_StoreIn));
+		jBCreateOutStorage = new JButton("出库记录");
+		jBCreateOutStorage.setIcon(new CustomIcon(Constants.PATH_StoreOut));
+		jBCreatePurchase = new JButton("采购记录");
+		jBCreatePurchase.setIcon(new CustomIcon(Constants.PATH_Purchase));
+		jBCreateSale = new JButton("销售记录");
+		jBCreateSale.setIcon(new CustomIcon(Constants.PATH_Sale));
+		JToolBar toolBar = new JToolBar();
+		toolBar.setFloatable(false);
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+		toolBar.setRollover(true);
+
+		// 工具条命令
+		toolBar.add(jBCreateInStorage);
+		toolBar.add(jBCreateOutStorage);
+		toolBar.add(jBCreatePurchase);
+		toolBar.add(jBCreateSale);
+		jBEditInfo = new JButton("修改记录");
+		jBEditInfo.setIcon(new CustomIcon(Constants.PATH_Modify));
+		toolBar.add(jBEditInfo);
+		jBRefresgTab = new JButton("刷新页面");
+		jBRefresgTab.setIcon(new CustomIcon(Constants.PATH_Refresh));
+		toolBar.add(jBRefresgTab);
+		
+		jBDelete = new JButton("删除记录");
+		jBDelete.setIcon(new CustomIcon(Constants.PATH_delete));
+		toolBar.add(jBDelete);
 	}
 
 	/**
@@ -291,7 +313,7 @@ public class MainFrame
 	private void addListeners()
 	{
 		// 采购记录
-		jMICreatePurchase.addActionListener(new ActionListener()
+		jBCreatePurchase.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -330,7 +352,7 @@ public class MainFrame
 		});
 		frame.addWindowListener(new WindowAdapter()
 		{
-			public void windowClosing(WindowEvent e) 
+			public void windowClosing(WindowEvent e)
 			{
 				JdbcUtil.shutdownEngine();
 				System.exit(0);

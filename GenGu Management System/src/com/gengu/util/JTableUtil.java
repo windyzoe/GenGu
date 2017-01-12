@@ -29,7 +29,7 @@ public class JTableUtil
 				width = Math.max(width, preferedWidth);
 			}
 			header.setResizingColumn(column); // 此行很重要
-			column.setWidth(width + myTable.getIntercellSpacing().width);
+			column.setWidth(width + myTable.getIntercellSpacing().width+5);
 		}
 	}
 }
