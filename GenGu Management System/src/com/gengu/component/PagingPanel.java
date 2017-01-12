@@ -1,6 +1,8 @@
 package com.gengu.component;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,24 +59,32 @@ public class PagingPanel extends JPanel
 		this.add(jBPageUp);
 
 		jBStart = new JToggleButton("1");
+		jBStart.setPreferredSize(new Dimension(51, 20));
+		jBStart.setBackground(null);
 		this.add(jBStart);
 
 		jB2 = new JToggleButton("2");
+		jB2.setPreferredSize(new Dimension(51, 20));
 		this.add(jB2);
 
 		jB3 = new JToggleButton("3");
+		jB3.setPreferredSize(new Dimension(51, 20));
 		this.add(jB3);
 		
 		jB4 = new JToggleButton("4");
+		jB4.setPreferredSize(new Dimension(51, 20));
 		this.add(jB4);
 		
 		jB5 = new JToggleButton("5");
+		jB5.setPreferredSize(new Dimension(51, 20));
 		this.add(jB5);
 
 		jB6 = new JToggleButton("6");
+		jB6.setPreferredSize(new Dimension(51, 20));
 		this.add(jB6);
 
 		jBEnd = new JToggleButton("7");
+		jBEnd.setPreferredSize(new Dimension(60, 20));
 		this.add(jBEnd);
 
 		jBPageDown = new JButton("ÏÂÒ»Ò³");
@@ -90,6 +100,11 @@ public class PagingPanel extends JPanel
 	{
 		this.pageNumber = allRows % Constants.ROWSIZE == 0 ? allRows / Constants.ROWSIZE : allRows / Constants.ROWSIZE + 1;
 		setButton(1);
+	}
+	public void setPanel(int allRows,int currentPage)
+	{
+		this.pageNumber = allRows % Constants.ROWSIZE == 0 ? allRows / Constants.ROWSIZE : allRows / Constants.ROWSIZE + 1;
+		setButton(currentPage);
 	}
 	private void setButton(int currentPage)
 	{
@@ -135,6 +150,14 @@ public class PagingPanel extends JPanel
 		default:
 			jBStart.setText(1+"...");
 			jBEnd.setText("..."+pageNumber);
+			if (jB2.getText().equals("2"))
+			{
+				jBStart.setText(1+"");
+			}
+			if (jB6.getText().equals(pageNumber-1+""))
+			{
+				jBEnd.setText(pageNumber+"");
+			}
 			break;
 		}
 		switch (currentPage)
@@ -224,6 +247,13 @@ public class PagingPanel extends JPanel
 			JToggleButton tempButton = (JToggleButton) e.getSource();
 			String strIndex = tempButton.getText();
 			System.out.println(strIndex);
+			if (strIndex.startsWith("..."))
+			{
+				strIndex=pageNumber+"";
+			}else if (strIndex.endsWith("..."))
+			{
+				strIndex="1";
+			}
 			int index = Integer.parseInt(strIndex);
 			setButton(index);
 		}

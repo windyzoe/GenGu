@@ -225,7 +225,7 @@ public class MainFrame
 		jTabbedPane = new JTabbedPane();
 		panel.add(jTabbedPane, BorderLayout.CENTER);
 		pagingPanel=new PagingPanel();
-		pagingPanel.setPanel(1000);
+		pagingPanel.setPanel(45);
 		panel.add(pagingPanel, BorderLayout.SOUTH);
 
 		// –ﬁ Œ”“«–ªª√Ê∞Â
