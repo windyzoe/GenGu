@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.gengu.common.Constants;
+
 /**
  * 数据库操作层面的工具类
  * @author XUZH
@@ -29,7 +31,6 @@ public class DaoUtil
 	 */
 	private DaoUtil()
 	{
-		System.out.println("DaoUtil");
 	}
 	/**
 	 * @param sqlFirst	SQL前面的命令(insert into TABLE)
@@ -88,5 +89,59 @@ public class DaoUtil
 		{
 			jdbcUtil.releaseConn();
 		}
+	}
+	/**获得某个表的记录总数
+	 * @param tableName
+	 * @return
+	 * @throws SQLException
+	 */
+	public int countTableRows(String tableName) throws SQLException
+	{
+		int count=0;
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		List<Map<String, Object>> maplist;
+		try
+		{
+			maplist = jdbcUtil.findResult("select count(*) from "+tableName, null);
+			Map<String, Object> map = maplist.get(0);
+			for (Map.Entry<String, Object> entry : map.entrySet())
+			{
+				count=(int)entry.getValue();
+			}
+		} catch (SQLException e)
+		{
+			throw e;
+		}finally {
+			jdbcUtil.releaseConn();
+		}
+		return count;
+	}
+	/**
+	 * 获得某个表单的分页数据
+	 * @param tableName
+	 * 表单名
+	 * @param currentPage
+	 * 当前页
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Map<String, Object>> getPagingRows(String tableName , int currentPage) throws SQLException
+	{
+		List<Map<String, Object>> maplist = null;
+		int count = countTableRows(tableName);
+		int offset = (currentPage-1)*Constants.ROWSIZE;
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		try
+		{
+			maplist = jdbcUtil.findResult("select * from "+tableName+" order by id desc offset "+offset+" rows fetch next "+Constants.ROWSIZE+" rows only", null);
+		} catch (SQLException e)
+		{
+			throw e;
+		}finally {
+			jdbcUtil.releaseConn();
+		}
+		return maplist;
 	}
 }

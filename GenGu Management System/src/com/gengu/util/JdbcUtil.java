@@ -313,15 +313,19 @@ public class JdbcUtil
 
 	public static void main(String[] args)
 	{
-		JdbcUtil jdbcUtil1 = new JdbcUtil();
-		JdbcUtil jdbcUtil2 = new JdbcUtil();
-		if (jdbcUtil1.getConnection() == jdbcUtil2.getConnection())
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		try
 		{
-			System.out.println("竟然一样");
-		} else
+			List<Map<String, Object>> maplist = jdbcUtil.findResult("select count(*) from purchaselist",null);
+			for (Map<String, Object> m : maplist)
+			{
+				System.out.println(m);
+			}
+		} catch (SQLException e)
 		{
-			System.out.println("确实不一样");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-
 }

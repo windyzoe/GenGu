@@ -32,14 +32,25 @@ public class PurchaseService
 	 */
 	public void createPurchaseList(Map<String, Object> map) throws SQLException
 	{
-		PurchaseDao.getInstance().createPurchaseList(map);
+		PurchaseDao.getInstance().createOneList(map);
 	}
 	
 	public List<Map<String, Object>> getPurchaseList()
 	{
 		try
 		{
-			return PurchaseDao.getInstance().getAllPurchaseList();
+			return PurchaseDao.getInstance().getAllList();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public List<Map<String, Object>> getPaging(int currentPage)
+	{
+		try
+		{
+			return PurchaseDao.getInstance().getPaging(currentPage);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();

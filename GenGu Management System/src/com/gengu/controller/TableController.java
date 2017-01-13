@@ -11,14 +11,34 @@ import com.gengu.ui.MainFrame;
  */
 public class TableController
 {
-	public void refreshAction()
+	public void refreshControl()
 	{
 		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
 		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
 		switch (title)
-		{
+		{ 
 		case "采购":
-			new PurchaseAction().refreshPurchaseList();
+			new PurchaseAction().refreshAction();
+			break;
+		case "销售":
+
+			break;
+		case "出入库":
+
+			break;
+
+		default:
+			break;
+		}
+	}
+	public void pagingControl(int currentPage)
+	{
+		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
+		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
+		switch (title)
+		{ 
+		case "采购":
+			new PurchaseAction().pagingAction(currentPage);
 			break;
 		case "销售":
 

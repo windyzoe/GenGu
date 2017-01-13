@@ -32,7 +32,7 @@ public class PurchaseDao
 	private PurchaseDao(){
 		
 	};
-	public static List<Map<String, Object>> getAllPurchaseList() throws SQLException
+	public List<Map<String, Object>> getAllList() throws SQLException
 	{
 		List<Map<String, Object>> maplist = null;
 		JdbcUtil jdbcUtil = new JdbcUtil();
@@ -40,10 +40,6 @@ public class PurchaseDao
 		try
 		{
 			maplist = jdbcUtil.findResult("select * from purchaselist", null);
-			for (Map<String, Object> m : maplist)
-			{
-				System.out.println(m);
-			}
 		} catch (SQLException e)
 		{
 			throw e;
@@ -53,23 +49,20 @@ public class PurchaseDao
 		}
 		return maplist;
 	}
+	public List<Map<String, Object>> getPaging(int currentPage) throws SQLException
+	{
+		List<Map<String, Object>> maplist=DaoUtil.getInstance().getPagingRows("purchaselist", currentPage);
+		return maplist;
+	}
 	/**
 	 * 创建一行采购记录
 	 * @param map	列名+值
 	 * @throws SQLException 
 	 */
-	public static void createPurchaseList(Map<String, Object> map) throws SQLException
+	public static void createOneList(Map<String, Object> map) throws SQLException
 	{
 		DaoUtil.getInstance().createOneTableLine("PURCHASELIST", map);
 	}
 	public static void main(String[] args){
-		try
-		{
-			getAllPurchaseList();
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

@@ -70,7 +70,7 @@ public class Constants
 	/**
 	 * 列表中的行数(用于分页)
 	 */
-	public final static int ROWSIZE = 12;
+	public final static int ROWSIZE = 30;
 	/**
 	 * 图标大小
 	 */

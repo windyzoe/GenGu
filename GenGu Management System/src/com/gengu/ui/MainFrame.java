@@ -224,8 +224,8 @@ public class MainFrame
 		panel.setLayout(new BorderLayout(0, 0));
 		jTabbedPane = new JTabbedPane();
 		panel.add(jTabbedPane, BorderLayout.CENTER);
-		pagingPanel=new PagingPanel();
-		pagingPanel.setPanel(45);
+		pagingPanel=PagingPanel.getInstance();
+		//pagingPanel.setPanel(100);
 		panel.add(pagingPanel, BorderLayout.SOUTH);
 
 		// –ﬁ Œ”“«–ªª√Ê∞Â
@@ -347,7 +347,7 @@ public class MainFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				new TableController().refreshAction();
+				new TableController().refreshControl();
 			}
 		});
 		frame.addWindowListener(new WindowAdapter()
