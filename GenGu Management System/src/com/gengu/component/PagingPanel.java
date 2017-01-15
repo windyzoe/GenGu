@@ -350,7 +350,7 @@ public class PagingPanel extends JPanel
 	 */
 	private void modifyButton(JButton jb)
 	{
-		jb.setBackground(new Color(255, 255, 167));
+		jb.setBackground(new Color(255, 255, 255));
 		jb.putClientProperty(SubstanceLookAndFeel.FOCUS_KIND, FocusKind.NONE);
 		jb.putClientProperty(SubstanceLookAndFeel.BUTTON_SIDE_PROPERTY,
 				EnumSet.of(SubstanceConstants.Side.RIGHT,
@@ -364,7 +364,7 @@ public class PagingPanel extends JPanel
 	 */
 	private void modifyButton(JToggleButton jb)
 	{
-		jb.setBackground(new Color(255, 255, 167));
+		jb.setBackground(new Color(255, 255, 255));
 		jb.putClientProperty(SubstanceLookAndFeel.FOCUS_KIND, FocusKind.NONE);
 		jb.putClientProperty(SubstanceLookAndFeel.BUTTON_SIDE_PROPERTY,
 				EnumSet.of(SubstanceConstants.Side.RIGHT,

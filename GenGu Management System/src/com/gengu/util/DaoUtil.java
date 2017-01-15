@@ -90,6 +90,39 @@ public class DaoUtil
 			jdbcUtil.releaseConn();
 		}
 	}
+
+	/**删除某表单的某些行
+	 * @param strTableName
+	 * @param IDs
+	 * 需要删除的ID
+	 * 注意：列名为“ID”
+	 * @throws SQLException
+	 */
+	public void deleteRows(String strTableName ,List<Integer> IDs) throws SQLException
+	{
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		String strSQL = "delete from "+strTableName+" where ID=?";
+		List<List<?>> obList = new ArrayList<>();
+		for (int ID : IDs)
+		{
+			List<Integer> tempList = new ArrayList<>();
+			tempList.add(ID);
+			obList.add(tempList);
+		}
+
+		try
+		{
+			jdbcUtil.updateManyByPreparedStatement(strSQL, obList);
+		} catch (SQLException e)
+		{
+			throw e;
+
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+	}
 	/**获得某个表的记录总数
 	 * @param tableName
 	 * @return

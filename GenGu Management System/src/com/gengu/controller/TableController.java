@@ -11,6 +11,9 @@ import com.gengu.ui.MainFrame;
  */
 public class TableController
 {
+	/**刷新处理
+	 * 
+	 */
 	public void refreshControl()
 	{
 		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
@@ -31,6 +34,10 @@ public class TableController
 			break;
 		}
 	}
+	/**分页命令的处理
+	 * @param currentPage
+	 * 当前页
+	 */
 	public void pagingControl(int currentPage)
 	{
 		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
@@ -39,6 +46,52 @@ public class TableController
 		{ 
 		case "采购":
 			new PurchaseAction().pagingAction(currentPage);
+			break;
+		case "销售":
+
+			break;
+		case "出入库":
+
+			break;
+
+		default:
+			break;
+		}
+	}
+	/**删除记录的处理
+	 * 
+	 */
+	public void deleteControl()
+	{
+		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
+		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
+		switch (title)
+		{ 
+		case "采购":
+			new PurchaseAction().deleteAction();
+			break;
+		case "销售":
+
+			break;
+		case "出入库":
+
+			break;
+
+		default:
+			break;
+		}
+	}
+	/**
+	 * 修改记录的处理
+	 */
+	public void modifyControl()
+	{
+		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
+		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
+		switch (title)
+		{ 
+		case "采购":
+			new PurchaseAction().deleteAction();
 			break;
 		case "销售":
 

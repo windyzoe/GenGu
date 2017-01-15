@@ -31,7 +31,7 @@ public class PurchaseDao
 	}
 	private PurchaseDao(){
 		
-	};
+	}
 	public List<Map<String, Object>> getAllList() throws SQLException
 	{
 		List<Map<String, Object>> maplist = null;
@@ -53,6 +53,10 @@ public class PurchaseDao
 	{
 		List<Map<String, Object>> maplist=DaoUtil.getInstance().getPagingRows("purchaselist", currentPage);
 		return maplist;
+	}
+	public void deleteRows(List<Integer> IDs) throws SQLException
+	{
+		DaoUtil.getInstance().deleteRows("purchaselist", IDs);
 	}
 	/**
 	 * 创建一行采购记录

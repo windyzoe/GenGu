@@ -23,7 +23,7 @@ public class PurchaseAction
 		new SwingWorker<List<String[]>, Void>()
 		{
 			@Override
-			protected List<String[]> doInBackground() throws Exception//查找当前的所有列表
+			protected List<String[]> doInBackground() throws Exception// 查找当前的所有列表
 			{
 				List<String[]> strRowList = new ArrayList<>();
 				List<Map<String, Object>> maplist = PurchaseService.getInstance().getPaging(currentPage);
@@ -32,7 +32,7 @@ public class PurchaseAction
 					List<String> strTempList = new ArrayList<>();
 					for (String string : ConstantsDB.PurchaseHeadDB)
 					{
-						//System.out.println(string);
+						// System.out.println(string);
 						strTempList.add(map.get(string.toUpperCase()).toString());
 					}
 					String[] arr = (String[]) strTempList.toArray(new String[strTempList.size()]);
@@ -45,7 +45,7 @@ public class PurchaseAction
 			protected void done()
 			{
 				DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().purchaseTable.getModel();
-				tableModel.setRowCount(0);//清空
+				tableModel.setRowCount(0);// 清空
 				try
 				{
 					List<String[]> strList = get();
@@ -53,12 +53,12 @@ public class PurchaseAction
 					{
 						tableModel.addRow(strings);
 					}
-					JTableUtil.fitTableColumns(MainFrame.getInstance().purchaseTable);//自适应宽度
-					//刷新ToolTip
+					JTableUtil.fitTableColumns(MainFrame.getInstance().purchaseTable);// 自适应宽度
+					// 刷新ToolTip
 					int tabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
-					String oldTips=MainFrame.getInstance().getTabPane().getToolTipTextAt(tabIndex);
-					String newTips=oldTips.substring(oldTips.indexOf(":"), oldTips.length());
-					MainFrame.getInstance().getTabPane().setToolTipTextAt(tabIndex, currentPage+newTips);
+					String oldTips = MainFrame.getInstance().getTabPane().getToolTipTextAt(tabIndex);
+					String newTips = oldTips.substring(oldTips.indexOf(":"), oldTips.length());
+					MainFrame.getInstance().getTabPane().setToolTipTextAt(tabIndex, currentPage + newTips);
 				} catch (InterruptedException | ExecutionException e)
 				{
 					e.printStackTrace();
@@ -67,15 +67,16 @@ public class PurchaseAction
 
 		}.execute();
 	}
+
 	/**
 	 * 刷新采购单
-	 * 1刷新列表
-	 * 2刷新分页组件
-	 * 3刷新toolTip
+	 *  1刷新列表
+	 *   2刷新分页组件
+	 *    3刷新toolTip
 	 */
 	public void refreshAction()
 	{
-		int count=0;
+		int count = 0;
 		try
 		{
 			count = DaoUtil.getInstance().countTableRows("purchaselist");
@@ -83,13 +84,44 @@ public class PurchaseAction
 		{
 			e.printStackTrace();
 		}
-		//刷新toolTip
+		// 刷新toolTip
 		int tabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
-		MainFrame.getInstance().getTabPane().setToolTipTextAt(tabIndex,1+":"+count);
-		//刷新组件
+		MainFrame.getInstance().getTabPane().setToolTipTextAt(tabIndex, 1 + ":" + count);
+		// 刷新组件
 		PagingPanel.getInstance().setPanel(count);
-		//刷新列表
+		// 刷新列表
 		this.pagingAction(1);
 
+	}
+
+	public void deleteAction()
+	{
+		DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().purchaseTable.getModel();
+		int[] indexs = MainFrame.getInstance().purchaseTable.getSelectedRows();
+		List<Integer> IDs = new ArrayList<>();
+		for (int index : indexs)
+		{
+			int ID = Integer.valueOf(tableModel.getValueAt(index, 0).toString());
+			IDs.add(ID);
+		}
+		for (int i = indexs.length - 1; i >= 0; i--)
+		{
+			tableModel.removeRow(indexs[i]);
+		}
+		new SwingWorker<Void, Void>()
+		{
+			@Override
+			protected Void doInBackground() throws Exception// 查找当前的所有列表
+			{
+				PurchaseService.getInstance().deleteRows(IDs);
+				return null;
+			}
+
+			@Override
+			protected void done()
+			{
+			}
+
+		}.execute();
 	}
 }

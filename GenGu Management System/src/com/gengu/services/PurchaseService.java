@@ -57,4 +57,14 @@ public class PurchaseService
 			return null;
 		}
 	}
+	public void deleteRows(List<Integer> IDs)
+	{
+		try
+		{
+			PurchaseDao.getInstance().deleteRows(IDs);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

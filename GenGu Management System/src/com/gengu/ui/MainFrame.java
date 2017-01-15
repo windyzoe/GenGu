@@ -350,6 +350,23 @@ public class MainFrame
 				new TableController().refreshControl();
 			}
 		});
+		jBDelete.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new TableController().deleteControl();
+			}
+		});
+		jBEditInfo.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new TableController().modifyControl();
+			}
+		});
 		frame.addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e)

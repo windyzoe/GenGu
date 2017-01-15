@@ -192,7 +192,6 @@ public class JdbcUtil
 			connection.rollback();
 			throw e;
 		}
-
 	}
 
 	/**
