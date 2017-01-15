@@ -1,7 +1,14 @@
 package com.gengu.controller;
 
+import javax.swing.DefaultBoundedRangeModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import com.gengu.action.PurchaseAction;
+import com.gengu.common.Constants;
+import com.gengu.common.ConstantsDB;
 import com.gengu.ui.MainFrame;
+import com.gengu.ui.ModifyTablePanel;
 
 /**
  * 各个列表的总命令(修改\添加\删除\)相关的处理
@@ -91,7 +98,7 @@ public class TableController
 		switch (title)
 		{ 
 		case "采购":
-			new PurchaseAction().deleteAction();
+			new ModifyTablePanel(ConstantsDB.PurchaseHead);
 			break;
 		case "销售":
 
