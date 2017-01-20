@@ -69,7 +69,7 @@ public class MaterialInfoAction
 	public void deleteMaterialAction()
 	{
 		String strCurrentClass = MaterialInfoPanel.getInstance().getComboBox().getSelectedItem().toString();
-		String strMessage="确认要删除'"+strCurrentClass+"'材料嘛?该材料包含的材料也会删除!";
+		String strMessage="确认要删除材料-'"+strCurrentClass+"'嘛?该材料包含的牌号也会删除!";
 		int index = JOptionPane.showConfirmDialog(MaterialInfoPanel.getInstance(), strMessage, "删除材料确认", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 		if (index==0)
 		{
@@ -107,7 +107,7 @@ public class MaterialInfoAction
 	 */
 	public void createModelAction(String strMaterial)
 	{
-		String strModel = JOptionPane.showInputDialog(MaterialInfoPanel.getInstance(), "请在" + strMaterial + "材料中创建新牌号", "牌号输入", JOptionPane.DEFAULT_OPTION);
+		String strModel = JOptionPane.showInputDialog(MaterialInfoPanel.getInstance(), "请在材料-'" + strMaterial + "'中创建新牌号", "牌号输入", JOptionPane.DEFAULT_OPTION);
 		if (strModel.trim().equals(""))
 		{
 			showErrorMessage("输入不为空!");
@@ -143,9 +143,9 @@ public class MaterialInfoAction
 	{
 		String strClass = MaterialInfoPanel.getInstance().getComboBox().getSelectedItem().toString();
 		List<String> modelList = MaterialInfoPanel.getInstance().getJList().getSelectedValuesList();
-		StringBuffer strMessge=new StringBuffer("确定要删除");
+		StringBuffer strMessge=new StringBuffer("确定要删除'");
 		strMessge.append(strClass);
-		strMessge.append("材料里 : ");
+		strMessge.append("'材料里 : ");
 		for (String string : modelList)
 		{
 			strMessge.append(string);

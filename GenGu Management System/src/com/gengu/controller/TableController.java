@@ -1,11 +1,6 @@
 package com.gengu.controller;
 
-import javax.swing.DefaultBoundedRangeModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
 import com.gengu.action.PurchaseAction;
-import com.gengu.common.Constants;
 import com.gengu.common.ConstantsDB;
 import com.gengu.ui.MainFrame;
 import com.gengu.ui.ModifyTablePanel;
@@ -96,9 +91,10 @@ public class TableController
 		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
 		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
 		switch (title)
-		{ 
+		{
 		case "≤…π∫":
-			new ModifyTablePanel(ConstantsDB.PurchaseHead);
+			int selectSize = MainFrame.getInstance().purchaseTable.getSelectedRowCount();
+			new ModifyTablePanel(ConstantsDB.PurchaseHead,selectSize);
 			break;
 		case "œ˙ €":
 

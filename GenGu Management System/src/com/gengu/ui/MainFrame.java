@@ -381,4 +381,8 @@ public class MainFrame
 	{
 		return this.jTabbedPane;
 	}
+	public String getTabName()
+	{
+		return jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
+	}
 }
