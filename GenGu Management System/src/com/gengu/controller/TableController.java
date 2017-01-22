@@ -1,5 +1,13 @@
 package com.gengu.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+
 import com.gengu.action.PurchaseAction;
 import com.gengu.common.ConstantsDB;
 import com.gengu.ui.MainFrame;
@@ -18,8 +26,7 @@ public class TableController
 	 */
 	public void refreshControl()
 	{
-		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
-		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
+		String title = MainFrame.getInstance().getTabName();
 		switch (title)
 		{ 
 		case "采购":
@@ -42,8 +49,7 @@ public class TableController
 	 */
 	public void pagingControl(int currentPage)
 	{
-		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
-		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
+		String title = MainFrame.getInstance().getTabName();
 		switch (title)
 		{ 
 		case "采购":
@@ -65,8 +71,7 @@ public class TableController
 	 */
 	public void deleteControl()
 	{
-		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
-		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
+		String title = MainFrame.getInstance().getTabName();
 		switch (title)
 		{ 
 		case "采购":
@@ -86,15 +91,13 @@ public class TableController
 	/**
 	 * 修改记录的处理
 	 */
-	public void modifyControl()
+	public void modifyController(Map<String, String> map)
 	{
-		int selectTabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
-		String title = MainFrame.getInstance().getTabPane().getTitleAt(selectTabIndex);
+		String title = MainFrame.getInstance().getTabName();
 		switch (title)
-		{
+		{ 
 		case "采购":
-			int selectSize = MainFrame.getInstance().purchaseTable.getSelectedRowCount();
-			new ModifyTablePanel(ConstantsDB.PurchaseHead,selectSize);
+			new PurchaseAction().modifyAction(map);
 			break;
 		case "销售":
 
@@ -107,4 +110,5 @@ public class TableController
 			break;
 		}
 	}
+	
 }

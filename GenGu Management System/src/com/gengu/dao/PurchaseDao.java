@@ -58,15 +58,17 @@ public class PurchaseDao
 	{
 		DaoUtil.getInstance().deleteRows("purchaselist", IDs);
 	}
+	public void updateRows(List<Integer> IDs,Map<String, String> map) throws SQLException
+	{
+		DaoUtil.getInstance().updateRows("purchaselist", IDs, map);
+	}
 	/**
 	 * 创建一行采购记录
 	 * @param map	列名+值
 	 * @throws SQLException 
 	 */
-	public static void createOneList(Map<String, Object> map) throws SQLException
+	public void createOneList(Map<String, Object> map) throws SQLException
 	{
 		DaoUtil.getInstance().createOneTableLine("PURCHASELIST", map);
-	}
-	public static void main(String[] args){
 	}
 }

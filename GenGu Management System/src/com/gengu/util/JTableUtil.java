@@ -1,10 +1,13 @@
 package com.gengu.util;
 
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+
+import com.gengu.ui.MainFrame;
 
 public class JTableUtil
 {
@@ -30,6 +33,23 @@ public class JTableUtil
 			}
 			header.setResizingColumn(column); // 此行很重要
 			column.setWidth(width + myTable.getIntercellSpacing().width+5);
+		}
+	}
+	public static void modifyTableValues(Map<String, String> map)
+	{
+		int[] rowIndexs = MainFrame.getInstance().getCurrentTable().getSelectedRows();
+		JTable jTable = MainFrame.getInstance().getCurrentTable();
+		int columnSize = jTable.getColumnCount();
+		for (int i = 0; i < columnSize; i++)
+		{
+			String strColumnName = jTable.getColumnName(i);
+			if (!map.containsKey(strColumnName))
+				continue;
+			String strValue = map.get(strColumnName);
+			for (int j : rowIndexs)
+			{
+				jTable.setValueAt(strValue, j, i);
+			}
 		}
 	}
 }

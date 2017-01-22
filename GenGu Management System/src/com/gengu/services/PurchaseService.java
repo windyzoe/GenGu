@@ -57,7 +57,7 @@ public class PurchaseService
 			return null;
 		}
 	}
-	public void deleteRows(List<Integer> IDs)
+	public boolean deleteRows(List<Integer> IDs)
 	{
 		try
 		{
@@ -65,6 +65,20 @@ public class PurchaseService
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
+			return false;
 		}
+		return true;
+	}
+	public boolean modifyRows(List<Integer> IDs,Map<String, String> map)
+	{
+		try
+		{
+			PurchaseDao.getInstance().updateRows(IDs, map);
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }

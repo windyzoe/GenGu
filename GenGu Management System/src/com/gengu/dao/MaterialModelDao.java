@@ -38,7 +38,7 @@ public class MaterialModelDao
 			strNameList.add("name");
 			List<Object> strValueList = new ArrayList<Object>();
 			strValueList.add(strMaterial);
-			String strSQL = DaoUtil.getInstance().getSQLString("insert into CLASSIFICATION", strNameList);
+			String strSQL = DaoUtil.getInstance().getInsertSQLString("insert into CLASSIFICATION", strNameList);
 			jdbcUtil.updateByPreparedStatement(strSQL, strValueList);
 		} catch (SQLException e)
 		{
@@ -129,7 +129,7 @@ public class MaterialModelDao
 			strNameList.add(entry.getKey());
 			strValueList.add(entry.getValue());
 		}
-		String strSQL = DaoUtil.getInstance().getSQLString("insert into model", strNameList);
+		String strSQL = DaoUtil.getInstance().getInsertSQLString("insert into model", strNameList);
 		JdbcUtil jdbcUtil = new JdbcUtil();
 		jdbcUtil.getConnection();
 		try

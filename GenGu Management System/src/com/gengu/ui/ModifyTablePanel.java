@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.gengu.common.Constants;
 import com.gengu.common.ConstantsDB;
+import com.gengu.controller.TableController;
 import com.gengu.util.JTableUtil;
 
 import javax.swing.JScrollPane;
@@ -28,6 +29,12 @@ import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JLabel;
 
+/**修改面板
+ * 基于列名生成修改面板
+ * 点击确定后修改界面和数据库的数据
+ * @author XUZH
+ *
+ */
 public class ModifyTablePanel extends JDialog
 {
 
@@ -137,14 +144,37 @@ public class ModifyTablePanel extends JDialog
 	}
 	/**
 	 * OK命令后执行的修改
+	 * 先确定需要修改的键值对
 	 */
 	private ActionListener actionListener=new ActionListener()
 	{
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			DefaultTableModel model = (DefaultTableModel) table.getModel();
-			System.out.println(model.getValueAt(0, 0));
+			if (table.isEditing()) 
+			    table.getCellEditor().stopCellEditing();
+			Map<String, String> map = getModifyValue();
+			new TableController().modifyController(map);
+			dispose();
 		}
 	};
+	/**获得当前的修改的值
+	 * @return
+	 */
+	private Map<String, String> getModifyValue()
+	{
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		int rowCount = model.getRowCount();
+		Map<String, String> map =new HashMap<>();
+		for (int i = 0; i < rowCount; i++)
+		{
+			String strAttr =(String) model.getValueAt(i, 0);
+			String strValue =(String) model.getValueAt(i, 1);
+			if (strValue.trim().equals(""))
+				continue;
+			map.put(strAttr, strValue);
+			System.out.println(strAttr+"/"+strValue);
+		}
+		return map;
+	}
 }

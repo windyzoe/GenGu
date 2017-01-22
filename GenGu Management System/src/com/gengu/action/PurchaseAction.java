@@ -2,10 +2,13 @@ package com.gengu.action;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import com.gengu.common.ConstantsDB;
@@ -91,37 +94,97 @@ public class PurchaseAction
 		PagingPanel.getInstance().setPanel(count);
 		// 刷新列表
 		this.pagingAction(1);
-
 	}
 
+	/**
+	 * 删除,数据库删除成功后,界面才删除
+	 */
 	public void deleteAction()
 	{
-		DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().purchaseTable.getModel();
-		int[] indexs = MainFrame.getInstance().purchaseTable.getSelectedRows();
+		//删除确认
+		int judge = JOptionPane.showConfirmDialog(MainFrame.getInstance().getTabPane(), "确实要删除这些记录吗?", "确认删除",JOptionPane.YES_NO_OPTION);
+		if (judge==1)
+			return;
+		//获得选中的行
+		DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().getCurrentTable().getModel();
+		int[] indexs = MainFrame.getInstance().getCurrentTable().getSelectedRows();
 		List<Integer> IDs = new ArrayList<>();
 		for (int index : indexs)
 		{
 			int ID = Integer.valueOf(tableModel.getValueAt(index, 0).toString());
 			IDs.add(ID);
 		}
-		for (int i = indexs.length - 1; i >= 0; i--)
-		{
-			tableModel.removeRow(indexs[i]);
-		}
-		new SwingWorker<Void, Void>()
+
+		new SwingWorker<Boolean, Void>()
 		{
 			@Override
-			protected Void doInBackground() throws Exception// 查找当前的所有列表
+			protected Boolean doInBackground() throws Exception// 查找当前的所有列表
 			{
-				PurchaseService.getInstance().deleteRows(IDs);
-				return null;
+				return PurchaseService.getInstance().deleteRows(IDs);
 			}
-
 			@Override
 			protected void done()
 			{
+				try
+				{
+					if (get())
+					{
+						for (int i = indexs.length - 1; i >= 0; i--)
+						{
+							tableModel.removeRow(indexs[i]);
+						}
+					}
+				} catch (InterruptedException | ExecutionException e)
+				{
+					e.printStackTrace();
+				}
 			}
-
+		}.execute();
+	}
+	/**修改,数据库修改成功后,才修改界面
+	 * @param map
+	 */
+	public void modifyAction(Map<String, String> map)
+	{
+		//获得选中的行
+		DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().getCurrentTable().getModel();
+		int[] indexs = MainFrame.getInstance().getCurrentTable().getSelectedRows();
+		List<Integer> IDs = new ArrayList<>();
+		for (int index : indexs)
+		{
+			int ID = Integer.valueOf(tableModel.getValueAt(index, 0).toString());
+			IDs.add(ID);
+		}
+		//转换
+		Map<String, String> newMap = new HashMap<>();
+		List<String> list = Arrays.asList(ConstantsDB.PurchaseHead);
+		for(Map.Entry<String, String> entry : map.entrySet())
+		{
+			int listIndex = list.indexOf(entry.getKey());
+			System.out.println("key :"+ConstantsDB.PurchaseHeadDB[listIndex]+" value : "+entry.getValue());
+			newMap.put(ConstantsDB.PurchaseHeadDB[listIndex], entry.getValue());
+		}
+		new SwingWorker<Boolean, Void>()
+		{
+			@Override
+			protected Boolean doInBackground() throws Exception//查找当前的所有列表
+			{
+				return PurchaseService.getInstance().modifyRows(IDs, newMap);
+			}
+			@Override
+			protected void done()
+			{
+				try
+				{
+					if (get())
+					{
+						JTableUtil.modifyTableValues(map);
+					}
+				} catch (InterruptedException | ExecutionException e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}.execute();
 	}
 }

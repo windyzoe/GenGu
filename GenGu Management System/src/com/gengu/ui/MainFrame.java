@@ -43,6 +43,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
@@ -364,7 +366,16 @@ public class MainFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				new TableController().modifyControl();
+				int selectSize = MainFrame.getInstance().getCurrentTable().getSelectedRowCount();//选中的列数
+				int columnSize = MainFrame.getInstance().getCurrentTable().getColumnCount();//列数
+				List<String> columnNames = new ArrayList<>();
+				for (int i = 0; i < columnSize; i++)
+				{
+					String strTemp = MainFrame.getInstance().getCurrentTable().getColumnName(i);
+					columnNames.add(strTemp);
+				}
+				String [] titles = columnNames.toArray(new String[columnNames.size()]);
+				new ModifyTablePanel(titles,selectSize);//基于列名生成修改面板
 			}
 		});
 		frame.addWindowListener(new WindowAdapter()
@@ -384,5 +395,11 @@ public class MainFrame
 	public String getTabName()
 	{
 		return jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
+	}
+	public JTable getCurrentTable()
+	{
+		JScrollPane jsPane = (JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex());
+		JTable currentTable = (JTable)jsPane.getViewport().getView();
+		return currentTable;
 	}
 }

@@ -37,7 +37,7 @@ public class DaoUtil
 	 * @param list	列名称
 	 * @return	PreparedStatement版的SQL语句
 	 */
-	public String getSQLString(String sqlFirst,List<String> list)
+	public String getInsertSQLString(String sqlFirst,List<String> list)
 	{
 		int size=list.size();
 		StringBuffer strSQL=new StringBuffer();
@@ -60,6 +60,24 @@ public class DaoUtil
 		System.out.println(strSQL);
 		return strSQL.toString();
 	}
+	public String getUpdateSQLString(String sqlFirst ,Map<String, String> map,String sqlEnd)
+	{
+		int size=map.size();
+		StringBuffer strSQL=new StringBuffer();
+		strSQL.append(sqlFirst);
+		strSQL.append(" ");
+		for(Map.Entry<String, String> entry : map.entrySet())
+		{
+			strSQL.append(entry.getKey());
+			strSQL.append("='");
+			strSQL.append(entry.getValue());
+			strSQL.append("', ");
+		}
+		strSQL.deleteCharAt(strSQL.lastIndexOf(","));
+		strSQL.append(sqlEnd);
+		System.out.println(strSQL);
+		return strSQL.toString();
+	}
 	/**在一个表单创建一行的公共方法
 	 * @param strTableName
 	 * @param map
@@ -76,7 +94,7 @@ public class DaoUtil
 			strNameList.add(entry.getKey());
 			strValueList.add(entry.getValue());
 		}
-		String strSQL =getSQLString("insert into "+strTableName, strNameList);
+		String strSQL =getInsertSQLString("insert into "+strTableName, strNameList);
 		JdbcUtil jdbcUtil = new JdbcUtil();
 		jdbcUtil.getConnection();
 		try
@@ -110,7 +128,37 @@ public class DaoUtil
 			tempList.add(ID);
 			obList.add(tempList);
 		}
+		try
+		{
+			jdbcUtil.updateManyByPreparedStatement(strSQL, obList);
+		} catch (SQLException e)
+		{
+			throw e;
 
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+	}
+	/**删除某表单的某些行
+	 * @param strTableName
+	 * @param IDs
+	 * 需要删除的ID
+	 * 注意：列名为“ID”
+	 * @throws SQLException
+	 */
+	public void updateRows(String strTableName ,List<Integer> IDs,Map<String, String> map) throws SQLException
+	{
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		String strSQL = getUpdateSQLString("update "+strTableName+" set", map, "where ID=?");
+		List<List<?>> obList = new ArrayList<>();
+		for (int ID : IDs)
+		{
+			List<Integer> tempList = new ArrayList<>();
+			tempList.add(ID);
+			obList.add(tempList);
+		}
 		try
 		{
 			jdbcUtil.updateManyByPreparedStatement(strSQL, obList);
