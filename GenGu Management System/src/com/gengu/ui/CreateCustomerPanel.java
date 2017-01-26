@@ -2,13 +2,23 @@ package com.gengu.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.gengu.common.Constants;
+import com.gengu.services.CustomerService;
+import com.gengu.services.SupplierService;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
@@ -16,7 +26,7 @@ public class CreateCustomerPanel extends JDialog
 {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
+	private JTextField jtfName;
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
@@ -27,6 +37,8 @@ public class CreateCustomerPanel extends JDialog
 	private JTextField textField_8;
 	private JTextField textField_9;
 	private JTextField textField_10;
+	private JButton		jbOK;
+	private JButton 	jbCancel;
 
 	/**
 	 * Launch the application.
@@ -49,8 +61,15 @@ public class CreateCustomerPanel extends JDialog
 	 */
 	public CreateCustomerPanel()
 	{
+		initLayout();
+		addListeners();	
+	}
+	private void initLayout()
+	{
+		setModal(true);
 		setBounds(100, 100, 450, 300);
 		setTitle("新建客户");
+		setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -65,9 +84,9 @@ public class CreateCustomerPanel extends JDialog
 				panel.add(label);
 			}
 			{
-				textField = new JTextField();
-				panel.add(textField);
-				textField.setColumns(10);
+				jtfName = new JTextField();
+				panel.add(jtfName);
+				jtfName.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u8054\u7CFB\u4EBA:");
@@ -185,17 +204,42 @@ public class CreateCustomerPanel extends JDialog
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
+				jbOK = new JButton("OK");
+				jbOK.setActionCommand("OK");
+				buttonPane.add(jbOK);
+				getRootPane().setDefaultButton(jbOK);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
+				jbCancel = new JButton("Cancel");
+				jbCancel.setActionCommand("Cancel");
+				buttonPane.add(jbCancel);
 			}
 		}
+	}
+	private void addListeners()
+	{
+		CreateCustomerPanel dialog=this;
+		jbOK.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				Boolean bl = CustomerService.getInstance().create(getInformation());
+				if (!bl)
+				{
+					JOptionPane.showMessageDialog(contentPanel, "创建客户失败！", "WARNING", JOptionPane.WARNING_MESSAGE);
+				}else {
+					dialog.dispose();
+				}
+			}
+		});
+	}
+	private Map<String, Object> getInformation()
+	{
+		Map<String, Object> map=new HashMap<>();
+		String strName = jtfName.getText();
+		map.put("Name", strName);
+		return map;
 	}
 
 }

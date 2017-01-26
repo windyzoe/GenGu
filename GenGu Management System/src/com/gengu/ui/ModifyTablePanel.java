@@ -151,8 +151,11 @@ public class ModifyTablePanel extends JDialog
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			if (table.isEditing()) 
+			//bug 如果当前table处于修改状态,那获取列表时,正在修改的那个值为空
+			//这两行代码解决了
+			if (table.isEditing()) //
 			    table.getCellEditor().stopCellEditing();
+			//
 			Map<String, String> map = getModifyValue();
 			new TableController().modifyController(map);
 			dispose();

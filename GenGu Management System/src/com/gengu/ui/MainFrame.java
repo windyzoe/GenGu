@@ -1,14 +1,10 @@
 package com.gengu.ui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.apache.derby.impl.sql.catalog.SYSTABLEPERMSRowFactory;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 
@@ -18,13 +14,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Image;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import com.gengu.common.Constants;
@@ -41,8 +32,6 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -53,11 +42,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.BoxLayout;
-import java.awt.Component;
-import javax.swing.JLabel;
-import javax.swing.JFormattedTextField;
-import javax.swing.Box;
-import javax.swing.JToggleButton;
 
 /**
  * 主窗口的UI
@@ -70,6 +54,8 @@ public class MainFrame
 	// 声明需要外部类刷新的组件
 	public JFrame frame;
 	public JTable purchaseTable;
+	public JTable saleTable;
+	public JTable warehouseTable;
 	// 声明内部组件
 	private JMenu jMenuFile;
 	private JMenu jMenuSetting;
@@ -239,10 +225,12 @@ public class MainFrame
 		JScrollPane scrollPane2 = new JScrollPane();
 		jTabbedPane.addTab("采购", null, scrollPane, null);
 		jTabbedPane.addTab("销售", null, scrollPane1, null);
-		jTabbedPane.addTab("出入库", null, scrollPane2, null);
+		jTabbedPane.addTab("仓库", null, scrollPane2, null);
 
 		// 加入列表
 		scrollPane.setViewportView(purchaseTable);
+		scrollPane1.setViewportView(saleTable);
+		scrollPane2.setViewportView(warehouseTable);
 
 		// 可左右拉伸面板加入选项面板和可切换面板
 		JPanel panel_1 = new JPanel();
@@ -296,6 +284,7 @@ public class MainFrame
 	 */
 	private void initTables()
 	{
+		//purchaseTable
 		DefaultTableModel model = new DefaultTableModel(null, ConstantsDB.PurchaseHead)
 		{
 			public boolean isCellEditable(int row, int column)
@@ -303,10 +292,32 @@ public class MainFrame
 				return false;
 			}
 		};
-		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();// 设置table内容居中
+		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();//设置table内容居中
 		tcr.setHorizontalAlignment(SwingConstants.CENTER);
 		purchaseTable = new JTable(model);
 		purchaseTable.setDefaultRenderer(Object.class, tcr);
+		
+		//saleTable
+		DefaultTableModel salemodel = new DefaultTableModel(null, ConstantsDB.SaleHead)
+		{
+			public boolean isCellEditable(int row, int column)
+			{
+				return false;
+			}
+		};
+		saleTable = new JTable(salemodel);
+		saleTable.setDefaultRenderer(Object.class, tcr);
+		
+		//warehourseTable
+		DefaultTableModel warehousemodel = new DefaultTableModel(null, ConstantsDB.WareHouseHead)
+		{
+			public boolean isCellEditable(int row, int column)
+			{
+				return false;
+			}
+		};
+		warehouseTable = new JTable(warehousemodel);
+		warehouseTable.setDefaultRenderer(Object.class, tcr);
 	}
 
 	/**
@@ -320,6 +331,16 @@ public class MainFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				CreatePurchaseOrderPanel dialog = new CreatePurchaseOrderPanel();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		// 采购记录
+		jBCreateSale.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				CreateSaleOrderPanel dialog = new CreateSaleOrderPanel();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
@@ -339,6 +360,16 @@ public class MainFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				CreateSupplierPanel dialog = new CreateSupplierPanel();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		jMICreateCustomer.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				CreateCustomerPanel dialog = new CreateCustomerPanel();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}

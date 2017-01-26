@@ -7,9 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -19,23 +17,20 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.border.TitledBorder;
 
-import com.gengu.action.CreateAction;
 import com.gengu.action.MaterialInfoAction;
-import com.gengu.action.SupplierAction;
-import com.gengu.action.CreateAction.CreatePurchaseOrderActionListener;
+import com.gengu.action.CustomerAction;
 import com.gengu.common.Constants;
 import com.gengu.services.PurchaseService;
-import com.gengu.services.SupplierService;
+import com.gengu.services.SaleService;
 import com.gengu.util.DateUtil;
 
 import javax.swing.JComboBox;
 
-public class CreatePurchaseOrderPanel extends JDialog
+public class CreateSaleOrderPanel extends JDialog
 {
 	private final JPanel contentPanel = new JPanel();
 	private JComboBox Classification;
@@ -45,7 +40,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 	private JTextField Factory;
 	private JTextField BatchLot;
 	private JTextField OrderTime;
-	private JComboBox Supplier;
+	private JComboBox Customer;
 	private JTextField PickingAddress;
 	private JComboBox Distrabution;
 	private JTextField Car;
@@ -59,7 +54,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 	{
 		try
 		{
-			CreatePurchaseOrderPanel dialog = new CreatePurchaseOrderPanel();
+			CreateSaleOrderPanel dialog = new CreateSaleOrderPanel();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e)
@@ -71,7 +66,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 	/**
 	 * Create the dialog.
 	 */
-	public CreatePurchaseOrderPanel()
+	public CreateSaleOrderPanel()
 	{
 		initLayout();
 		addListeners();
@@ -81,7 +76,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 	private void initLayout()
 	{
 		setModal(true);
-		setTitle("创建采购记录");
+		setTitle("创建销售记录");
 		setIconImage(new ImageIcon(Constants.PATH_GenGuIcon).getImage());
 		setBounds(100, 100, 1000, 314);
 		setLocationRelativeTo(MaterialInfoPanel.getInstance());
@@ -164,12 +159,12 @@ public class CreatePurchaseOrderPanel extends JDialog
 				OrderTime.setColumns(10);
 			}
 			{
-				JLabel label = new JLabel("\u4F9B\u5E94\u5546:");
+				JLabel label = new JLabel("\u5BA2\u6237:");
 				panel_1.add(label);
 			}
 			{
-				Supplier = new JComboBox();
-				panel_1.add(Supplier);
+				Customer = new JComboBox();
+				panel_1.add(Customer);
 			}
 		}
 		{
@@ -246,7 +241,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 		map.put("Factory", Factory.getText());
 		map.put("BatchLot", BatchLot.getText());
 		map.put("OrderTime", OrderTime.getText());
-		map.put("Supplier", Supplier.getSelectedItem().toString());
+		map.put("Customer", Customer.getSelectedItem().toString());
 		map.put("PickingAddress", PickingAddress.getText());
 		map.put("Distrabution", Distrabution.getSelectedItem().toString());
 		map.put("Car", Car.getText());
@@ -256,7 +251,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 	}
 	private void addListeners()
 	{
-		CreatePurchaseOrderPanel createPurchaseOrderPanel=this;
+		CreateSaleOrderPanel createSaleOrderPanel=this;
 		Classification.addItemListener(new ItemListener()
 		{
 			@Override
@@ -280,18 +275,18 @@ public class CreatePurchaseOrderPanel extends JDialog
 					map =checkAndMap();
 				} catch (Exception e1)
 				{
-					JOptionPane.showMessageDialog(createPurchaseOrderPanel, "输入错误,请检查输入!", "ERROR", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(createSaleOrderPanel, "输入错误,请检查输入!", "ERROR", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try
 				{
-					PurchaseService.getInstance().createPurchaseList(map);
+					SaleService.getInstance().create(map);
 				} catch (SQLException e1)
 				{
-					JOptionPane.showMessageDialog(createPurchaseOrderPanel, "创建失败,请检查输入!", "ERROR", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(createSaleOrderPanel, "创建失败,请检查输入!", "ERROR", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 				}
-				createPurchaseOrderPanel.dispose();
+				createSaleOrderPanel.dispose();
 			}
 		});
 	}
@@ -302,7 +297,7 @@ public class CreatePurchaseOrderPanel extends JDialog
 	private void initInfos()
 	{
 		new MaterialInfoAction().refreshClass(Classification);//初始化分类
-		new SupplierAction().refreshSupplierNames(Supplier);//初始化供应商
+		new CustomerAction().refreshNames(Customer);//初始化供应商
 		OrderTime.setText(DateUtil.getInstance().getNowDate());//初始化订单日期(可修改)
 		Distrabution.addItem("是");//是否配送
 		Distrabution.addItem("否");//是否配送

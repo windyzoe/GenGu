@@ -9,6 +9,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 import com.gengu.action.PurchaseAction;
+import com.gengu.action.SaleAction;
 import com.gengu.common.ConstantsDB;
 import com.gengu.ui.MainFrame;
 import com.gengu.ui.ModifyTablePanel;
@@ -33,9 +34,9 @@ public class TableController
 			new PurchaseAction().refreshAction();
 			break;
 		case "销售":
-
+			new SaleAction().refreshAction();
 			break;
-		case "出入库":
+		case "仓库":
 
 			break;
 
@@ -56,9 +57,9 @@ public class TableController
 			new PurchaseAction().pagingAction(currentPage);
 			break;
 		case "销售":
-
+			new SaleAction().pagingAction(currentPage);
 			break;
-		case "出入库":
+		case "仓库":
 
 			break;
 
@@ -78,9 +79,9 @@ public class TableController
 			new PurchaseAction().deleteAction();
 			break;
 		case "销售":
-
+			new SaleAction().deleteAction();
 			break;
-		case "出入库":
+		case "仓库":
 
 			break;
 
@@ -100,9 +101,9 @@ public class TableController
 			new PurchaseAction().modifyAction(map);
 			break;
 		case "销售":
-
+			new SaleAction().modifyAction(map);
 			break;
-		case "出入库":
+		case "仓库":
 
 			break;
 

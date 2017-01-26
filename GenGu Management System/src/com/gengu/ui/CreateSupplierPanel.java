@@ -65,6 +65,7 @@ public class CreateSupplierPanel extends JDialog
 	}
 	public void initLayout()
 	{
+		setModal(true);
 		setBounds(100, 100, 993, 277);
 		setTitle("新建供应商");
 		setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
