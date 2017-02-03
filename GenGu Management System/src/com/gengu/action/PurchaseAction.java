@@ -16,7 +16,6 @@ import com.gengu.component.PagingPanel;
 import com.gengu.services.PurchaseService;
 import com.gengu.ui.MainFrame;
 import com.gengu.util.DaoUtil;
-import com.gengu.util.JTableUtil;
 
 public class PurchaseAction
 {
@@ -47,7 +46,7 @@ public class PurchaseAction
 			@Override
 			protected void done()
 			{
-				DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().purchaseTable.getModel();
+				DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().getCurrentTable().getModel();
 				tableModel.setRowCount(0);// 清空
 				try
 				{
@@ -56,7 +55,7 @@ public class PurchaseAction
 					{
 						tableModel.addRow(strings);
 					}
-					JTableUtil.fitTableColumns(MainFrame.getInstance().purchaseTable);// 自适应宽度
+					MainFrame.getInstance().getCurrentTable().fitTableColumns();// 自适应宽度
 					// 刷新ToolTip
 					int tabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
 					String oldTips = MainFrame.getInstance().getTabPane().getToolTipTextAt(tabIndex);
@@ -178,8 +177,7 @@ public class PurchaseAction
 				{
 					if (get())
 					{
-						JTableUtil.modifyTableValues(map);
-					}
+						MainFrame.getInstance().getCurrentTable().modifyTableValues(map);					}
 				} catch (InterruptedException | ExecutionException e)
 				{
 					e.printStackTrace();

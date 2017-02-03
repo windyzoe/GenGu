@@ -19,7 +19,6 @@ import javax.swing.table.DefaultTableModel;
 import com.gengu.common.Constants;
 import com.gengu.common.ConstantsDB;
 import com.gengu.controller.TableController;
-import com.gengu.util.JTableUtil;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;

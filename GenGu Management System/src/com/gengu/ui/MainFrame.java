@@ -21,6 +21,7 @@ import javax.swing.JTable;
 import com.gengu.common.Constants;
 import com.gengu.common.ConstantsDB;
 import com.gengu.component.CustomIcon;
+import com.gengu.component.CustomTable;
 import com.gengu.component.PagingPanel;
 import com.gengu.controller.TableController;
 import com.gengu.util.JdbcUtil;
@@ -53,9 +54,9 @@ public class MainFrame
 {
 	// 声明需要外部类刷新的组件
 	public JFrame frame;
-	public JTable purchaseTable;
-	public JTable saleTable;
-	public JTable warehouseTable;
+	public CustomTable purchaseTable;
+	public CustomTable saleTable;
+	public CustomTable warehouseTable;
 	// 声明内部组件
 	private JMenu jMenuFile;
 	private JMenu jMenuSetting;
@@ -203,8 +204,9 @@ public class MainFrame
 		jMenuConfig.add(jMIStorageInfo);
 		jMenuConfig.add(jMIMaterialInfo);
 		jMenuConfig.add(jMICarInfo);
-		jMenuSupplier.add(jMIListSupplier);
 		jMenuSupplier.add(jMICreateSupplier);
+		jMenuSupplier.add(jMIListSupplier);
+		
 
 		// 表格面板
 		JPanel panel = new JPanel();
@@ -285,39 +287,13 @@ public class MainFrame
 	private void initTables()
 	{
 		//purchaseTable
-		DefaultTableModel model = new DefaultTableModel(null, ConstantsDB.PurchaseHead)
-		{
-			public boolean isCellEditable(int row, int column)
-			{
-				return false;
-			}
-		};
-		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();//设置table内容居中
-		tcr.setHorizontalAlignment(SwingConstants.CENTER);
-		purchaseTable = new JTable(model);
-		purchaseTable.setDefaultRenderer(Object.class, tcr);
+		purchaseTable = new CustomTable(ConstantsDB.PurchaseHead);
 		
 		//saleTable
-		DefaultTableModel salemodel = new DefaultTableModel(null, ConstantsDB.SaleHead)
-		{
-			public boolean isCellEditable(int row, int column)
-			{
-				return false;
-			}
-		};
-		saleTable = new JTable(salemodel);
-		saleTable.setDefaultRenderer(Object.class, tcr);
+		saleTable=new CustomTable(ConstantsDB.SaleHead);
 		
 		//warehourseTable
-		DefaultTableModel warehousemodel = new DefaultTableModel(null, ConstantsDB.WareHouseHead)
-		{
-			public boolean isCellEditable(int row, int column)
-			{
-				return false;
-			}
-		};
-		warehouseTable = new JTable(warehousemodel);
-		warehouseTable.setDefaultRenderer(Object.class, tcr);
+		warehouseTable=new CustomTable(ConstantsDB.WareHouseHead);
 	}
 
 	/**
@@ -427,10 +403,10 @@ public class MainFrame
 	{
 		return jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
 	}
-	public JTable getCurrentTable()
+	public CustomTable getCurrentTable()
 	{
 		JScrollPane jsPane = (JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex());
-		JTable currentTable = (JTable)jsPane.getViewport().getView();
+		CustomTable currentTable = (CustomTable)jsPane.getViewport().getView();
 		return currentTable;
 	}
 }
