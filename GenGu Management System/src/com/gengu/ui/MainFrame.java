@@ -72,8 +72,7 @@ public class MainFrame
 	private JMenuItem jMIStorageInfo;
 	private JMenuItem jMIMaterialInfo;
 	private JMenuItem jMICarInfo;
-	private JButton jBCreateInStorage;
-	private JButton jBCreateOutStorage;
+	private JButton jBCreateInOutStorage;
 	private JButton jBCreatePurchase;
 	private JButton jBCreateSale;
 	private JButton jBListProfit;
@@ -251,10 +250,8 @@ public class MainFrame
 		panel_1.add(jBListtoragePay);
 		jBListOtherPay = new JButton("其它统计");
 		panel_1.add(jBListOtherPay);
-		jBCreateInStorage = new JButton("入库记录");
-		jBCreateInStorage.setIcon(new CustomIcon(Constants.PATH_StoreIn));
-		jBCreateOutStorage = new JButton("出库记录");
-		jBCreateOutStorage.setIcon(new CustomIcon(Constants.PATH_StoreOut));
+		jBCreateInOutStorage = new JButton("出入库记录");
+		jBCreateInOutStorage.setIcon(new CustomIcon(Constants.PATH_StoreIn));
 		jBCreatePurchase = new JButton("采购记录");
 		jBCreatePurchase.setIcon(new CustomIcon(Constants.PATH_Purchase));
 		jBCreateSale = new JButton("销售记录");
@@ -265,8 +262,7 @@ public class MainFrame
 		toolBar.setRollover(true);
 
 		// 工具条命令
-		toolBar.add(jBCreateInStorage);
-		toolBar.add(jBCreateOutStorage);
+		toolBar.add(jBCreateInOutStorage);
 		toolBar.add(jBCreatePurchase);
 		toolBar.add(jBCreateSale);
 		jBEditInfo = new JButton("修改记录");
@@ -299,8 +295,21 @@ public class MainFrame
 	/**
 	 * 给组件加上事件
 	 */
+	/**
+	 * 
+	 */
 	private void addListeners()
 	{
+		// 出入库记录
+		jBCreateInOutStorage.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				CreateInOutWareHousePanel dialog = new CreateInOutWareHousePanel();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
 		// 采购记录
 		jBCreatePurchase.addActionListener(new ActionListener()
 		{
@@ -311,7 +320,7 @@ public class MainFrame
 				dialog.setVisible(true);
 			}
 		});
-		// 采购记录
+		// 销售记录
 		jBCreateSale.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -387,6 +396,11 @@ public class MainFrame
 		});
 		frame.addWindowListener(new WindowAdapter()
 		{
+			/* 
+			 * 重写主窗口关闭事件
+			 * 主窗口关闭时才会关闭数据库
+			 * fix bug 每次与数据库交互时都会重新加载数据库驱动
+			 */
 			public void windowClosing(WindowEvent e)
 			{
 				JdbcUtil.shutdownEngine();
@@ -399,10 +413,16 @@ public class MainFrame
 	{
 		return this.jTabbedPane;
 	}
+	/**获取当前窗口tab页名
+	 * @return
+	 */
 	public String getTabName()
 	{
 		return jTabbedPane.getTitleAt(jTabbedPane.getSelectedIndex());
 	}
+	/**获取当前的Jtable
+	 * @return
+	 */
 	public CustomTable getCurrentTable()
 	{
 		JScrollPane jsPane = (JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex());

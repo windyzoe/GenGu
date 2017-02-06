@@ -2,7 +2,9 @@ package com.gengu.component;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JTable;
@@ -17,6 +19,11 @@ import com.gengu.ui.MainFrame;
 
 public class CustomTable extends JTable
 {
+	/**
+	 * 渲染器(改变颜色和居中)
+	 */
+	DateRenderer dateRenderer = new DateRenderer();
+	
 	public CustomTable(String[] titles)
 	{
 		DefaultTableModel warehousemodel = new DefaultTableModel(null, titles)
@@ -28,6 +35,7 @@ public class CustomTable extends JTable
 		};
 		setModel(warehousemodel);
 		setLineMiddle();
+		setRowSelectionAllowed(rowSelectionAllowed);
 	}
 
 	public CustomTable()
@@ -35,11 +43,13 @@ public class CustomTable extends JTable
 
 	}
 
+	/**表格居中
+	 * 
+	 */
 	private void setLineMiddle()
 	{
-		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();// 设置table内容居中
-		tcr.setHorizontalAlignment(SwingConstants.CENTER);
-		this.setDefaultRenderer(Object.class, tcr);
+		dateRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		this.setDefaultRenderer(Object.class, dateRenderer);
 	}
 
 	/**
@@ -90,43 +100,38 @@ public class CustomTable extends JTable
 		}
 	}
 
-	public void changColor()
+	public TableCellRenderer getCellRenderer(int row, int column)
 	{
-		DefaultTableModel tableModel = (DefaultTableModel) this.getModel();
-
+		return dateRenderer;
 	}
 
-	private JTable jtableReqs = new JTable()
-	{
-		DateRenderer dateRenderer = new DateRenderer();
-
-		public TableCellRenderer getCellRenderer(int row, int column)
-		{
-			return dateRenderer;
-		}
-	};
-
+	/**扩展渲染器内部类
+	 * @author XUZH
+	 *
+	 */
 	private class DateRenderer extends DefaultTableCellRenderer
 	{
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 		{
 			Component com = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			if (row == n)// 你要变色的行
+			if (rows.contains(row) ){
 				com.setBackground(Color.red);
+			}
 			else
 				com.setBackground(null);
+			if (isSelected)
+			{
+				com.setBackground(selectionBackground);
+			}
 
 			return com;
 		}
+		
+		List<Integer> rows=new ArrayList<>();
 
-		int n;
-
-		public void setColor(int row, Color color)
+		public void setColor(List<Integer> rows)
 		{
-			n = row;
+			this.rows = rows;
 		}
 	}
-
-	// ((DateRenderer)jtableReqs.getCellRenderer(yourow, 3)).setColor(yourow,
-	// Color.red);
 }
