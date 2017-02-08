@@ -10,6 +10,7 @@ import javax.swing.JTable;
 
 import com.gengu.action.PurchaseAction;
 import com.gengu.action.SaleAction;
+import com.gengu.action.WarehouseAction;
 import com.gengu.common.ConstantsDB;
 import com.gengu.ui.MainFrame;
 import com.gengu.ui.ModifyTablePanel;
@@ -37,7 +38,7 @@ public class TableController
 			new SaleAction().refreshAction();
 			break;
 		case "²Ö¿â":
-
+			new WarehouseAction().refreshAction();
 			break;
 
 		default:
@@ -60,7 +61,7 @@ public class TableController
 			new SaleAction().pagingAction(currentPage);
 			break;
 		case "²Ö¿â":
-
+			new WarehouseAction().pagingAction(currentPage);
 			break;
 
 		default:
@@ -82,7 +83,7 @@ public class TableController
 			new SaleAction().deleteAction();
 			break;
 		case "²Ö¿â":
-
+			new WarehouseAction().deleteAction();
 			break;
 
 		default:
@@ -104,7 +105,7 @@ public class TableController
 			new SaleAction().modifyAction(map);
 			break;
 		case "²Ö¿â":
-
+			new WarehouseAction().modifyAction(map);
 			break;
 
 		default:

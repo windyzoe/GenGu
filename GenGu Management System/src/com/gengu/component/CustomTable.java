@@ -114,15 +114,19 @@ public class CustomTable extends JTable
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 		{
 			Component com = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			if (rows.contains(row) ){
-				com.setBackground(Color.red);
-			}
-			else
-				com.setBackground(null);
-			if (isSelected)
+			if (table==MainFrame.getInstance().warehouseTable)
 			{
-				com.setBackground(selectionBackground);
+				if (table.getValueAt(row, 3).toString().equals("³ö¿â") ){
+					com.setBackground(Color.red);
+				}
+				else
+					com.setBackground(null);
+				if (isSelected)
+				{
+					com.setBackground(selectionBackground);
+				}
 			}
+
 
 			return com;
 		}

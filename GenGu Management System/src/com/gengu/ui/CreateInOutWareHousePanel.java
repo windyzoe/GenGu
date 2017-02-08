@@ -16,9 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.gengu.action.MaterialInfoAction;
-import com.gengu.action.SupplierAction;
 import com.gengu.common.Constants;
-import com.gengu.services.PurchaseService;
+import com.gengu.services.WarehouseService;
 import com.gengu.util.DateUtil;
 
 import javax.swing.BoxLayout;
@@ -190,7 +189,7 @@ public class CreateInOutWareHousePanel extends JDialog
 				}
 				try
 				{
-					PurchaseService.getInstance().createPurchaseList(map);
+					WarehouseService.getInstance().create(map);
 				} catch (SQLException e1)
 				{
 					JOptionPane.showMessageDialog(dialog, "创建失败,请检查输入!", "ERROR", JOptionPane.ERROR_MESSAGE);

@@ -140,10 +140,10 @@ public class DaoUtil
 			jdbcUtil.releaseConn();
 		}
 	}
-	/**删除某表单的某些行
+	/**更新某表单的某些行
 	 * @param strTableName
 	 * @param IDs
-	 * 需要删除的ID
+	 * 需要更新的ID
 	 * 注意：列名为“ID”
 	 * @throws SQLException
 	 */
