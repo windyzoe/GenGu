@@ -12,6 +12,7 @@ import com.gengu.action.PurchaseAction;
 import com.gengu.action.SaleAction;
 import com.gengu.action.WarehouseAction;
 import com.gengu.common.ConstantsDB;
+import com.gengu.component.PagingPanel;
 import com.gengu.ui.MainFrame;
 import com.gengu.ui.ModifyTablePanel;
 
@@ -112,5 +113,25 @@ public class TableController
 			break;
 		}
 	}
+	/**
+	 * 标签页切换事件处理
+	 * 更新分页组件
+	 */
+	public void updatePaging()
+	{
+		JTabbedPane jTabbedPane=MainFrame.getInstance().getTabPane();
+		int index = jTabbedPane.getSelectedIndex();
+		String tip = jTabbedPane.getToolTipTextAt(index);
+		if (tip==null|| tip.equals(""))
+		{
+			refreshControl();
+			return;
+		}
+		int currentPage = Integer.parseInt(tip.substring(0, tip.lastIndexOf(":")));
+		int total = Integer.parseInt(tip.substring(tip.lastIndexOf(":")+1));
+		System.out.println(currentPage +":"+total);
+		PagingPanel.getInstance().setPanel(total, currentPage);
+	}
+	
 	
 }

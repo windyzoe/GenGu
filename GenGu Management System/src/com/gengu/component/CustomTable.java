@@ -117,7 +117,7 @@ public class CustomTable extends JTable
 			if (table==MainFrame.getInstance().warehouseTable)
 			{
 				if (table.getValueAt(row, 3).toString().equals("³ö¿â") ){
-					com.setBackground(Color.red);
+					com.setBackground(new Color(220, 246, 206));
 				}
 				else
 					com.setBackground(null);

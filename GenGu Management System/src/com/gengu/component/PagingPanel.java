@@ -257,7 +257,13 @@ public class PagingPanel extends JPanel
 
 	private void initAllButtons()
 	{
-		System.out.println("init buttons");
+		jBStart.setVisible(true);
+		jB2.setVisible(true);
+		jB3.setVisible(true);
+		jB4.setVisible(true);
+		jB5.setVisible(true);
+		jB6.setVisible(true);
+		jBEnd.setVisible(true);
 		jBStart.setSelected(false);
 		jB2.setSelected(false);
 		jB3.setSelected(false);
