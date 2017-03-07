@@ -38,7 +38,7 @@ public class TableController
 		case "销售":
 			new SaleAction().refreshAction();
 			break;
-		case "仓库":
+		case "出入库":
 			new WarehouseAction().refreshAction();
 			break;
 
@@ -61,7 +61,7 @@ public class TableController
 		case "销售":
 			new SaleAction().pagingAction(currentPage);
 			break;
-		case "仓库":
+		case "出入库":
 			new WarehouseAction().pagingAction(currentPage);
 			break;
 
@@ -83,7 +83,7 @@ public class TableController
 		case "销售":
 			new SaleAction().deleteAction();
 			break;
-		case "仓库":
+		case "出入库":
 			new WarehouseAction().deleteAction();
 			break;
 
@@ -105,7 +105,7 @@ public class TableController
 		case "销售":
 			new SaleAction().modifyAction(map);
 			break;
-		case "仓库":
+		case "出入库":
 			new WarehouseAction().modifyAction(map);
 			break;
 

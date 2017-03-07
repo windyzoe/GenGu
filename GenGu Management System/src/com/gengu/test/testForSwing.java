@@ -1,65 +1,126 @@
 package com.gengu.test;
 
-import javax.swing.*;
-
-import javax.swing.table.*;
-
-import java.awt.*;
-
-import java.awt.event.*;
-
-import java.util.*;
-
 public class testForSwing
 {
 
-	public testForSwing()
-	{
-
-		JFrame f = new JFrame();
-
-		Object[][] p =
-		{
-				{ "阿呆", new Integer(66), new Integer(32), new Integer(98), new Boolean(false), new Boolean(false) },
-
-				{ "阿呆", new Integer(82), new Integer(69), new Integer(128), new Boolean(true), new Boolean(false) }, };
-
-		String[] n =
-		{ "姓名", "语文", "数学", "总分", "及格", "作弊" };
-
-		JTable table = new JTable(p, n);
-
-		table.setPreferredScrollableViewportSize(new Dimension(550, 30));
-
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-
-		JScrollPane scrollPane = new JScrollPane(table);
-
-		f.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-		f.setTitle("Simple Table");
-		f.pack();
-		f.show();
-		f.setVisible(true);
-
-		f.addWindowListener(
-
-				new WindowAdapter()
-				{
-
-					public void windowClosing(WindowEvent e)
-					{
-
-						System.exit(0);
-					}
-				});
-
-	}
-
 	public static void main(String[] args)
 	{
+		Account account = new Account("zhang san", 10000.0f);
+		AccountOperator accountOperator = new AccountOperator(account);
 
-		new testForSwing();
+		final int THREAD_NUM = 5;
+		Thread threads[] = new Thread[THREAD_NUM];
+		for (int i = 0; i < THREAD_NUM; i++)
+		{
+			threads[i] = new Thread(accountOperator, "Thread" + i);
+			threads[i].start();
+		}
+
 	}
 
+}
+
+/**
+ * 同步线程
+ */
+class SyncThread implements Runnable
+{
+	private static int count;
+
+	public SyncThread()
+	{
+		count = 0;
+	}
+
+	public void run()
+	{
+		synchronized (this)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				try
+				{
+					System.out.println(Thread.currentThread().getName() + ":" + (count++));
+					Thread.sleep(1000);
+				} catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public int getCount()
+	{
+		return count;
+	}
+}
+
+/**
+ * 银行账户类
+ */
+class Account
+{
+	String name;
+	float amount;
+
+	public Account(String name, float amount)
+	{
+		this.name = name;
+		this.amount = amount;
+	}
+
+	// 存钱
+	public void deposit(float amt)
+	{
+		amount += amt;
+		try
+		{
+			Thread.sleep(100);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	// 取钱
+	public void withdraw(float amt)
+	{
+		amount -= amt;
+		try
+		{
+			Thread.sleep(100);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public float getBalance()
+	{
+		return amount;
+	}
+}
+
+/**
+ * 账户操作类
+ */
+class AccountOperator implements Runnable
+{
+	private Account account;
+
+	public AccountOperator(Account account)
+	{
+		this.account = account;
+	}
+
+	public void run()
+	{
+		//synchronized (account)
+		{
+			account.deposit(500);
+			account.withdraw(500);
+			System.out.println(Thread.currentThread().getName() + ":" + account.getBalance());
+		}
+	}
 }

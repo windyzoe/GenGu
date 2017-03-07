@@ -40,9 +40,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Insets;
 
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
@@ -50,6 +54,11 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.BoxLayout;
+import javax.swing.JSeparator;
+import javax.swing.JPopupMenu;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JTextField;
 
 /**
  * 主窗口的UI
@@ -65,6 +74,8 @@ public class MainFrame
 	public CustomTable saleTable;
 	public CustomTable warehouseTable;
 	// 声明内部组件
+	private JTabbedPane jTabbedPane;
+	private PagingPanel pagingPanel;
 	private JMenu jMenuFile;
 	private JMenu jMenuSetting;
 	private JMenu jMenuCustomer;
@@ -89,8 +100,9 @@ public class MainFrame
 	private JButton jBEditInfo;
 	private JButton jBRefresgTab;
 	private JButton jBDelete;
-	private JTabbedPane jTabbedPane;
-	private PagingPanel pagingPanel;
+	private JMenuItem jMIEditInfo;
+	private JMenuItem jMIRefresgTab;
+	private JMenuItem jMIDelete;
 
 	/**
 	 * Launch the application.
@@ -126,6 +138,9 @@ public class MainFrame
 	 * 饿汉单例模式,线程安全
 	 */
 	private static final MainFrame single = new MainFrame();
+	private JSeparator separator;
+	private JPopupMenu popupMenu;
+	private JTextField textField;
 
 	/**
 	 * 单例模式
@@ -149,6 +164,7 @@ public class MainFrame
 		initializeComponent();
 		initTables();
 		initLayout();
+		initToolbar();
 		addListeners();
 		registerTabPaneClose();
 	}
@@ -230,13 +246,14 @@ public class MainFrame
 		JScrollPane scrollPane = new JScrollPane();
 		JScrollPane scrollPane1 = new JScrollPane();
 		JScrollPane scrollPane2 = new JScrollPane();
+		jTabbedPane.addTab("出入库", null, scrollPane2, null);
 		jTabbedPane.addTab("采购", null, scrollPane, null);
 		jTabbedPane.addTab("销售", null, scrollPane1, null);
-		jTabbedPane.addTab("仓库", null, scrollPane2, null);
 
 		// 加入列表
 		scrollPane.setViewportView(purchaseTable);
 		scrollPane1.setViewportView(saleTable);
+
 		scrollPane2.setViewportView(warehouseTable);
 
 		// 可左右拉伸面板加入选项面板和可切换面板
@@ -244,43 +261,55 @@ public class MainFrame
 		frame.getContentPane().add(panel_1, BorderLayout.WEST);
 
 		// 修饰左面板,加入内容
-		panel_1.setBorder(new TitledBorder(new TitledBorder(new LineBorder(new Color(130, 135, 144)), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), "统计", TitledBorder.CENTER,
-				TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_1.setBorder(new TitledBorder(new TitledBorder(new LineBorder(new Color(130, 135, 144)), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), "\u8FC7\u6EE4",
+				TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
+		
+		textField = new JTextField();
+		panel_1.add(textField);
+		textField.setColumns(10);
 
+	}
+
+	private void initToolbar()
+	{
+		// 工具条命令
 		jBListProfit = new JButton("利润统计");
-		panel_1.add(jBListProfit);
 		jBListTranPay = new JButton("运费统计");
-		panel_1.add(jBListTranPay);
 		jBListtoragePay = new JButton("仓储费统计");
-		panel_1.add(jBListtoragePay);
 		jBListOtherPay = new JButton("其它统计");
-		panel_1.add(jBListOtherPay);
 		jBCreateInOutStorage = new JButton("出入库记录");
 		jBCreateInOutStorage.setIcon(new CustomIcon(Constants.PATH_StoreIn));
 		jBCreatePurchase = new JButton("采购记录");
 		jBCreatePurchase.setIcon(new CustomIcon(Constants.PATH_Purchase));
 		jBCreateSale = new JButton("销售记录");
 		jBCreateSale.setIcon(new CustomIcon(Constants.PATH_Sale));
+		jBEditInfo = new JButton("修改");
+		jBEditInfo.setIcon(new CustomIcon(Constants.PATH_Modify));
+		jBRefresgTab = new JButton("刷新");
+		jBRefresgTab.setIcon(new CustomIcon(Constants.PATH_Refresh));
+		jBDelete = new JButton("删除");
+		jBDelete.setIcon(new CustomIcon(Constants.PATH_delete));
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		toolBar.setRollover(true);
-
-		// 工具条命令
 		toolBar.add(jBCreateInOutStorage);
 		toolBar.add(jBCreatePurchase);
 		toolBar.add(jBCreateSale);
-		jBEditInfo = new JButton("修改记录");
-		jBEditInfo.setIcon(new CustomIcon(Constants.PATH_Modify));
-		toolBar.add(jBEditInfo);
-		jBRefresgTab = new JButton("刷新页面");
-		jBRefresgTab.setIcon(new CustomIcon(Constants.PATH_Refresh));
-		toolBar.add(jBRefresgTab);
 
-		jBDelete = new JButton("删除记录");
-		jBDelete.setIcon(new CustomIcon(Constants.PATH_delete));
+		toolBar.addSeparator();
+
+		toolBar.add(jBEditInfo);
+		toolBar.add(jBRefresgTab);
 		toolBar.add(jBDelete);
+
+		toolBar.addSeparator();
+
+		toolBar.add(jBListProfit);
+		toolBar.add(jBListTranPay);
+		toolBar.add(jBListtoragePay);
+		toolBar.add(jBListOtherPay);
 	}
 
 	/**
@@ -296,6 +325,22 @@ public class MainFrame
 
 		// warehourseTable
 		warehouseTable = new CustomTable(ConstantsDB.WareHouseHead);
+
+		// 为table添加右键右键菜单
+		popupMenu = new JPopupMenu();
+		popupMenu.setBorderPainted(false);
+		jMIEditInfo = new JMenuItem("修改");
+		jMIEditInfo.setIcon(new CustomIcon(Constants.PATH_Modify));
+		jMIRefresgTab = new JMenuItem("刷新");
+		jMIRefresgTab.setIcon(new CustomIcon(Constants.PATH_Refresh));
+		jMIDelete = new JMenuItem("删除");
+		jMIDelete.setIcon(new CustomIcon(Constants.PATH_delete));
+		popupMenu.add(jMIEditInfo);
+		popupMenu.add(jMIRefresgTab);
+		popupMenu.add(jMIDelete);
+		addPopup(purchaseTable, popupMenu);
+		addPopup(saleTable, popupMenu);
+		addPopup(warehouseTable, popupMenu);
 	}
 
 	/**
@@ -374,13 +419,39 @@ public class MainFrame
 				new TableController().refreshControl();
 			}
 		});
-		jBDelete.addActionListener(new ActionListener()
+		jMIRefresgTab.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new TableController().refreshControl();
+			}
+		});
+		jMIDelete.addActionListener(new ActionListener()
 		{
 
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				new TableController().deleteControl();
+			}
+		});
+		jMIEditInfo.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				int selectSize = MainFrame.getInstance().getCurrentTable().getSelectedRowCount();// 选中的列数
+				int columnSize = MainFrame.getInstance().getCurrentTable().getColumnCount();// 列数
+				List<String> columnNames = new ArrayList<>();
+				for (int i = 0; i < columnSize; i++)
+				{
+					String strTemp = MainFrame.getInstance().getCurrentTable().getColumnName(i);
+					columnNames.add(strTemp);
+				}
+				String[] titles = columnNames.toArray(new String[columnNames.size()]);
+				new ModifyTablePanel(titles, selectSize);// 基于列名生成修改面板
 			}
 		});
 		jBEditInfo.addActionListener(new ActionListener()
@@ -428,7 +499,7 @@ public class MainFrame
 	 */
 	private void registerTabPaneClose()
 	{
-		jTabbedPane.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
+		jTabbedPane.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.FALSE);
 
 		// register tab close listener on the specific tabbed pane.
 		SubstanceLookAndFeel.registerTabCloseChangeListener(jTabbedPane, new VetoableTabCloseListener()
@@ -440,10 +511,14 @@ public class MainFrame
 			public void tabClosed(JTabbedPane tabbedPane, Component tabComponent)
 			{
 			}
+
 			public boolean vetoTabClosing(JTabbedPane tabbedPane, Component tabComponent)
 			{
-				return (JOptionPane.showConfirmDialog(jTabbedPane,
-						"Are you sure you want to close " + tabbedPane.getTitleAt(tabbedPane.indexOfComponent(tabComponent)) + "?") != JOptionPane.YES_OPTION);
+				return true;
+				// (JOptionPane.showConfirmDialog(jTabbedPane,
+				// "Are you sure you want to close " +
+				// tabbedPane.getTitleAt(tabbedPane.indexOfComponent(tabComponent))
+				// + "?") != JOptionPane.YES_OPTION);
 			}
 		});
 
@@ -474,5 +549,38 @@ public class MainFrame
 		JScrollPane jsPane = (JScrollPane) jTabbedPane.getComponentAt(jTabbedPane.getSelectedIndex());
 		CustomTable currentTable = (CustomTable) jsPane.getViewport().getView();
 		return currentTable;
+	}
+
+	/**
+	 * 给某个组件添加右键菜单
+	 * 
+	 * @param component
+	 * @param popup
+	 */
+	private static void addPopup(Component component, final JPopupMenu popup)
+	{
+		component.addMouseListener(new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					showMenu(e);
+				}
+			}
+
+			public void mouseReleased(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					showMenu(e);
+				}
+			}
+
+			private void showMenu(MouseEvent e)
+			{
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }
