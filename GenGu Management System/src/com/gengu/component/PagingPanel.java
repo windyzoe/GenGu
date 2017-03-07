@@ -63,6 +63,7 @@ public class PagingPanel extends JPanel
 	{
 		initLayout();
 		addListeners();
+		setPanel(0);
 	}
 
 	private void initLayout()
@@ -141,6 +142,7 @@ public class PagingPanel extends JPanel
 	{
 		this.pageNumber = allRows % Constants.ROWSIZE == 0 ? allRows / Constants.ROWSIZE : allRows / Constants.ROWSIZE + 1;
 		this.currentPage=currentPage;
+		this.jLAllRows.setText(allRows+"");
 		setButton(currentPage);
 	}
 
@@ -153,6 +155,14 @@ public class PagingPanel extends JPanel
 		renameButton(currentPage);
 		switch (pageNumber)
 		{
+		case 0:
+			jB2.setVisible(false);
+			jB3.setVisible(false);
+			jB4.setVisible(false);
+			jB5.setVisible(false);
+			jB6.setVisible(false);
+			jBEnd.setVisible(false);
+			break;
 		case 1:
 			jB2.setVisible(false);
 			jB3.setVisible(false);
