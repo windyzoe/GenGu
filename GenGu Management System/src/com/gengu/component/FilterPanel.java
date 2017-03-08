@@ -51,6 +51,7 @@ public class FilterPanel extends JPanel
 		visible=true;
 		init();
 		addListeners();
+		setPanelVisible(visible);
 	}
 
 	public void init()
@@ -147,34 +148,12 @@ public class FilterPanel extends JPanel
 	}
 	public void addListeners()
 	{
-		FilterPanel filterPanel=this;
 		btnNewButton.addMouseListener(new MouseListener()
 		{
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
-				if (visible)
-				{
-					System.out.println(filterPanel.getSize().toString());
-					
-					filterPanel.setPreferredSize(new Dimension(20, 500));
-					visible=false;
-					lblNewLabel.setVisible(false);
-					comboBox.setVisible(false);
-					comboBox_1.setVisible(false);
-					lblNewLabel_1.setVisible(false);
-					textField.setVisible(false);
-					textField_1.setVisible(false);
-				}else{
-					filterPanel.setPreferredSize(new Dimension(165, 500));
-					visible=true;
-					lblNewLabel.setVisible(true);
-					comboBox.setVisible(true);
-					comboBox_1.setVisible(true);
-					lblNewLabel_1.setVisible(true);
-					textField.setVisible(true);
-					textField_1.setVisible(true);
-				}
+				setPanelVisible(visible);
 			}
 			
 			@Override
@@ -197,6 +176,31 @@ public class FilterPanel extends JPanel
 			{
 			}
 		});
+	}
+	private void setPanelVisible(boolean isVisible)
+	{
+		if (isVisible)
+		{
+			System.out.println(this.getSize().toString());
+			
+			this.setPreferredSize(new Dimension(20, 500));
+			this.visible=false;
+			lblNewLabel.setVisible(false);
+			comboBox.setVisible(false);
+			comboBox_1.setVisible(false);
+			lblNewLabel_1.setVisible(false);
+			textField.setVisible(false);
+			textField_1.setVisible(false);
+		}else{
+			this.setPreferredSize(new Dimension(165, 500));
+			this.visible=true;
+			lblNewLabel.setVisible(true);
+			comboBox.setVisible(true);
+			comboBox_1.setVisible(true);
+			lblNewLabel_1.setVisible(true);
+			textField.setVisible(true);
+			textField_1.setVisible(true);
+		}
 	}
 
 }

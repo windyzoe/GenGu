@@ -67,7 +67,7 @@ public class CreateCustomerPanel extends JDialog
 	private void initLayout()
 	{
 		setModal(true);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 768, 300);
 		setTitle("新建客户");
 		setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
 		getContentPane().setLayout(new BorderLayout());

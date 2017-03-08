@@ -94,6 +94,7 @@ public class MainFrame
 	private JMenuItem jMICreateSupplier;
 	private JMenuItem jMIListSupplier;
 	private JMenuItem jMIStorageInfo;
+	private JMenuItem jMIFactoryInfo;
 	private JMenuItem jMIMaterialInfo;
 	private JMenuItem jMICarInfo;
 	private JButton jBCreateInOutStorage;
@@ -189,6 +190,7 @@ public class MainFrame
 		jMICreateSupplier = new JMenuItem("新建供应商");
 		jMIListSupplier = new JMenuItem("供应商概览");
 		jMenuConfig = new JMenu("配置");
+		jMIFactoryInfo = new JMenuItem("工厂信息");
 		jMIStorageInfo = new JMenuItem("仓库信息");
 		jMIMaterialInfo = new JMenuItem("材料信息");
 		jMICarInfo = new JMenuItem("运输车号");
@@ -228,6 +230,7 @@ public class MainFrame
 		jMenuFile.add(jMIOpen);
 		jMenuCustomer.add(jMICreateCustomer);
 		jMenuCustomer.add(jMIListCustomer);
+		jMenuConfig.add(jMIFactoryInfo);
 		jMenuConfig.add(jMIStorageInfo);
 		jMenuConfig.add(jMIMaterialInfo);
 		jMenuConfig.add(jMICarInfo);
@@ -264,7 +267,6 @@ public class MainFrame
 		// 可左右拉伸面板加入选项面板和可切换面板
 		filterPanel= new FilterPanel();
 		frame.getContentPane().add(filterPanel, BorderLayout.WEST);
-
 	}
 
 	private void initToolbar()
@@ -382,6 +384,24 @@ public class MainFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				MaterialInfoPanel dialog = MaterialInfoPanel.getInstance();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		jMIFactoryInfo.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				FactoryInfoDialog dialog = new FactoryInfoDialog();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		jMICarInfo.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				CarInfoDialog dialog = new CarInfoDialog();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
