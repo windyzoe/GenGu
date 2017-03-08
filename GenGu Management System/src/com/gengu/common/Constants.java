@@ -64,6 +64,10 @@ public class Constants
 	 */
 	public final static String PATH_Purchase= PATH_Image + File.separator + "purchase.png";
 	/**
+	 * 侧拉框图标
+	 */
+	public final static String PATH_LeftWindow= PATH_Image + File.separator + "leftwindow.png";
+	/**
 	 * 字体大小
 	 */
 	public final static int APPFONTSIZE = 14;

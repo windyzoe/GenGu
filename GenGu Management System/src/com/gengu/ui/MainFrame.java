@@ -25,6 +25,7 @@ import com.gengu.common.Constants;
 import com.gengu.common.ConstantsDB;
 import com.gengu.component.CustomIcon;
 import com.gengu.component.CustomTable;
+import com.gengu.component.FilterPanel;
 import com.gengu.component.PagingPanel;
 import com.gengu.controller.TableController;
 import com.gengu.util.JdbcUtil;
@@ -59,6 +60,10 @@ import javax.swing.JPopupMenu;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JSplitPane;
+import java.awt.FlowLayout;
+import javax.swing.JComboBox;
 
 /**
  * 主窗口的UI
@@ -74,6 +79,7 @@ public class MainFrame
 	public CustomTable saleTable;
 	public CustomTable warehouseTable;
 	// 声明内部组件
+	private FilterPanel filterPanel;
 	private JTabbedPane jTabbedPane;
 	private PagingPanel pagingPanel;
 	private JMenu jMenuFile;
@@ -138,9 +144,8 @@ public class MainFrame
 	 * 饿汉单例模式,线程安全
 	 */
 	private static final MainFrame single = new MainFrame();
-	private JSeparator separator;
 	private JPopupMenu popupMenu;
-	private JTextField textField;
+
 
 	/**
 	 * 单例模式
@@ -257,17 +262,8 @@ public class MainFrame
 		scrollPane2.setViewportView(warehouseTable);
 
 		// 可左右拉伸面板加入选项面板和可切换面板
-		JPanel panel_1 = new JPanel();
-		frame.getContentPane().add(panel_1, BorderLayout.WEST);
-
-		// 修饰左面板,加入内容
-		panel_1.setBorder(new TitledBorder(new TitledBorder(new LineBorder(new Color(130, 135, 144)), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)), "\u8FC7\u6EE4",
-				TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.Y_AXIS));
-		
-		textField = new JTextField();
-		panel_1.add(textField);
-		textField.setColumns(10);
+		filterPanel= new FilterPanel();
+		frame.getContentPane().add(filterPanel, BorderLayout.WEST);
 
 	}
 
@@ -429,6 +425,15 @@ public class MainFrame
 			}
 		});
 		jMIDelete.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new TableController().deleteControl();
+			}
+		});
+		jBDelete.addActionListener(new ActionListener()
 		{
 
 			@Override
