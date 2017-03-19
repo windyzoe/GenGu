@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.omg.CORBA.Principal;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
 import org.pushingpixels.substance.api.tabbed.VetoableTabCloseListener;
@@ -28,6 +29,8 @@ import com.gengu.component.CustomTable;
 import com.gengu.component.FilterPanel;
 import com.gengu.component.PagingPanel;
 import com.gengu.controller.TableController;
+import com.gengu.ui.sum.ProfitDialog;
+import com.gengu.ui.sum.TransportCostDialog;
 import com.gengu.util.JdbcUtil;
 
 import javax.swing.ImageIcon;
@@ -392,7 +395,7 @@ public class MainFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				FactoryInfoDialog dialog = new FactoryInfoDialog();
+				FactoryInfoDialog dialog =FactoryInfoDialog.getInstance();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
@@ -401,7 +404,7 @@ public class MainFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				CarInfoDialog dialog = new CarInfoDialog();
+				CarInfoDialog dialog = CarInfoDialog.getInstance();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
@@ -494,6 +497,26 @@ public class MainFrame
 				}
 				String[] titles = columnNames.toArray(new String[columnNames.size()]);
 				new ModifyTablePanel(titles, selectSize);// 基于列名生成修改面板
+			}
+		});
+		jBListProfit.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				ProfitDialog dialog = new ProfitDialog();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		jBListTranPay.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				TransportCostDialog dialog = new TransportCostDialog();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
 			}
 		});
 		/*

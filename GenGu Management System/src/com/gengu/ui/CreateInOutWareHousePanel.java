@@ -15,6 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.gengu.action.FactoryAction;
 import com.gengu.action.MaterialInfoAction;
 import com.gengu.common.Constants;
 import com.gengu.services.WarehouseService;
@@ -32,7 +33,7 @@ public class CreateInOutWareHousePanel extends JDialog
 	private final JPanel contentPanel = new JPanel();
 	private JTextField OrderTime;
 	private JTextField Quantity;
-	private JTextField Factory;
+	private JComboBox Factory;
 	private JTextField Remark;
 	private JComboBox Style;
 	private JComboBox Classification;
@@ -113,7 +114,7 @@ public class CreateInOutWareHousePanel extends JDialog
 				panel.add(Model);
 			}
 			{
-				JLabel label = new JLabel("\u6570\u91CF\uFF1A");
+				JLabel label = new JLabel("\u6570\u91CF(\u5428)\uFF1A");
 				panel.add(label);
 			}
 			{
@@ -126,9 +127,8 @@ public class CreateInOutWareHousePanel extends JDialog
 				panel.add(label);
 			}
 			{
-				Factory = new JTextField();
+				Factory = new JComboBox();
 				panel.add(Factory);
-				Factory.setColumns(10);
 			}
 		}
 		{
@@ -205,6 +205,7 @@ public class CreateInOutWareHousePanel extends JDialog
 	private void initInfos()
 	{
 		new MaterialInfoAction().refreshClass(Classification);//初始化分类
+		new FactoryAction().refreshAction(Factory);
 		OrderTime.setText(DateUtil.getInstance().getNowDate());//初始化订单日期(可修改)
 		Style.addItem("出库");//是否配送
 		Style.addItem("入库");//是否配送
@@ -224,7 +225,7 @@ public class CreateInOutWareHousePanel extends JDialog
 		map.put("Classification", Classification.getSelectedItem().toString());
 		map.put("Model", Model.getSelectedItem().toString());
 		map.put("Quantity", quantity);
-		map.put("Factory", Factory.getText());
+		map.put("Factory", Factory.getSelectedItem().toString());
 		map.put("OrderTime", OrderTime.getText());
 		map.put("CreateTime", DateUtil.getInstance().getNowTime());
 		map.put("Remark", Remark.getText());

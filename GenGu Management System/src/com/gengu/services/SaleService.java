@@ -57,7 +57,7 @@ public class SaleService
 			return null;
 		}
 	}
-	public boolean deleteRows(List<Integer> IDs)
+	public boolean deleteRows(List<Object> IDs)
 	{
 		try
 		{

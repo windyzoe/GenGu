@@ -24,10 +24,12 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.border.TitledBorder;
 
+import com.gengu.action.CarAction;
 import com.gengu.action.CreateAction;
 import com.gengu.action.MaterialInfoAction;
 import com.gengu.action.SupplierAction;
 import com.gengu.action.CreateAction.CreatePurchaseOrderActionListener;
+import com.gengu.action.FactoryAction;
 import com.gengu.common.Constants;
 import com.gengu.services.PurchaseService;
 import com.gengu.services.SupplierService;
@@ -42,13 +44,13 @@ public class CreatePurchaseOrderPanel extends JDialog
 	private JComboBox Model;
 	private JTextField UnitPrice;
 	private JTextField Quantity;
-	private JTextField Factory;
+	private JComboBox Factory;
 	private JTextField BatchLot;
 	private JTextField OrderTime;
 	private JComboBox Supplier;
 	private JTextField PickingAddress;
 	private JComboBox Distrabution;
-	private JTextField Car;
+	private JComboBox Car;
 	private JTextField TansCost;
 	private	JButton okButton;
 
@@ -134,9 +136,8 @@ public class CreatePurchaseOrderPanel extends JDialog
 				panel.add(label);
 			}
 			{
-				Factory = new JTextField();
+				Factory = new JComboBox();
 				panel.add(Factory);
-				Factory.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u6279\u53F7:");
@@ -200,9 +201,8 @@ public class CreatePurchaseOrderPanel extends JDialog
 				panel.add(label);
 			}
 			{
-				Car = new JTextField();
+				Car = new JComboBox();
 				panel.add(Car);
-				Car.setColumns(10);
 			}
 			{
 				JLabel label = new JLabel("\u8FD0\u8F93\u8D39\u7528:");
@@ -243,13 +243,13 @@ public class CreatePurchaseOrderPanel extends JDialog
 		map.put("UnitPrice", unitprice);
 		map.put("Quantity", quantity);
 		map.put("TotalPrice", unitprice*quantity);
-		map.put("Factory", Factory.getText());
+		map.put("Factory", Factory.getSelectedItem().toString());
 		map.put("BatchLot", BatchLot.getText());
 		map.put("OrderTime", OrderTime.getText());
 		map.put("Supplier", Supplier.getSelectedItem().toString());
 		map.put("PickingAddress", PickingAddress.getText());
 		map.put("Distrabution", Distrabution.getSelectedItem().toString());
-		map.put("Car", Car.getText());
+		map.put("Car", Car.getSelectedItem().toString());
 		map.put("TansCost", TansCost.getText());
 		map.put("CreateTime", DateUtil.getInstance().getNowTime());
 		return map;
@@ -303,6 +303,8 @@ public class CreatePurchaseOrderPanel extends JDialog
 	{
 		new MaterialInfoAction().refreshClass(Classification);//初始化分类
 		new SupplierAction().refreshSupplierNames(Supplier);//初始化供应商
+		new CarAction().refreshAction(Car);
+		new FactoryAction().refreshAction(Factory);
 		OrderTime.setText(DateUtil.getInstance().getNowDate());//初始化订单日期(可修改)
 		Distrabution.addItem("是");//是否配送
 		Distrabution.addItem("否");//是否配送

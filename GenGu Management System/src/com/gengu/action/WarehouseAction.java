@@ -108,7 +108,7 @@ public class WarehouseAction
 		//获得选中的行
 		DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().getCurrentTable().getModel();
 		int[] indexs = MainFrame.getInstance().getCurrentTable().getSelectedRows();
-		List<Integer> IDs = new ArrayList<>();
+		List<Object> IDs = new ArrayList<>();
 		for (int index : indexs)
 		{
 			int ID = Integer.valueOf(tableModel.getValueAt(index, 0).toString());

@@ -8,22 +8,22 @@ import java.util.Map;
 import com.gengu.util.DaoUtil;
 import com.gengu.util.JdbcUtil;
 
-public class CustomerDao
+public class CarDao
 {
 	/**
 	 * 饿汉单例模式,线程安全
 	 */
-	private static final CustomerDao single = new CustomerDao();
+	private static final CarDao single = new CarDao();
 
 	/**
 	 * 单例模式
 	 * @return
 	 */
-	public static CustomerDao getInstance()
+	public static CarDao getInstance()
 	{
 		return single;
 	}
-	private CustomerDao(){
+	private CarDao(){
 		
 	};
 	/**获得所有客户的名称
@@ -37,7 +37,7 @@ public class CustomerDao
 		List<String> strNameList = new ArrayList<>();
 		try
 		{
-			List<Map<String, Object>> templist = jdbcUtil.findResult("select ID from customer", null);
+			List<Map<String, Object>> templist = jdbcUtil.findResult("select ID from car", null);
 			for (Map<String, Object> map : templist)
 			{
 				for (Map.Entry<String, Object> entry : map.entrySet())
@@ -60,6 +60,10 @@ public class CustomerDao
 	 */
 	public void create(Map<String, Object> map) throws SQLException
 	{
-		DaoUtil.getInstance().createOneTableLine("customer", map);
+		DaoUtil.getInstance().createOneTableLine("car", map);
+	}
+	public void deleteRows(List<Object> IDs) throws SQLException
+	{
+		DaoUtil.getInstance().deleteRows("car", IDs);
 	}
 }

@@ -57,7 +57,7 @@ public class WarehouseService
 			return null;
 		}
 	}
-	public boolean deleteRows(List<Integer> IDs)
+	public boolean deleteRows(List<Object> IDs)
 	{
 		try
 		{

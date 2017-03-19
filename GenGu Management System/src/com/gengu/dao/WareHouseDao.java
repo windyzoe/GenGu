@@ -51,7 +51,7 @@ public class WareHouseDao
 		List<Map<String, Object>> maplist=DaoUtil.getInstance().getPagingRows("warehouselist", currentPage);
 		return maplist;
 	}
-	public void deleteRows(List<Integer> IDs) throws SQLException
+	public void deleteRows(List<Object> IDs) throws SQLException
 	{
 		DaoUtil.getInstance().deleteRows("warehouselist", IDs);
 	}

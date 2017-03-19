@@ -47,12 +47,29 @@ public class PurchaseDao
 		}
 		return maplist;
 	}
+	public List<Map<String, Object>> getTransportCost(String strBeforeDate , String strAfterDate) throws SQLException
+	{
+		List<Map<String, Object>> maplist = null;
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		try
+		{
+			maplist = jdbcUtil.findResult("SELECT SUM(TansCost) AS COST FROM purchaselist where OrderTime Between Date('"+strBeforeDate+"') and Date('"+strAfterDate+"')", null);
+		} catch (SQLException e)
+		{
+			throw e;
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+		return maplist;
+	}
 	public List<Map<String, Object>> getPaging(int currentPage) throws SQLException
 	{
 		List<Map<String, Object>> maplist=DaoUtil.getInstance().getPagingRows("purchaselist", currentPage);
 		return maplist;
 	}
-	public void deleteRows(List<Integer> IDs) throws SQLException
+	public void deleteRows(List<Object> IDs) throws SQLException
 	{
 		DaoUtil.getInstance().deleteRows("purchaselist", IDs);
 	}
@@ -68,5 +85,20 @@ public class PurchaseDao
 	public void createOneList(Map<String, Object> map) throws SQLException
 	{
 		DaoUtil.getInstance().createOneTableLine("PURCHASELIST", map);
+	}
+	public static void main(String[] args)
+	{
+		try
+		{
+			List<Map<String, Object>> maplist = PurchaseDao.getInstance().getTransportCost("2017-03-02","2017-04-01");
+			for (Map<String, Object> map : maplist)
+			{
+				System.out.println(map.get("COST"));
+			}
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

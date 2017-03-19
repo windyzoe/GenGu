@@ -116,15 +116,15 @@ public class DaoUtil
 	 * 注意：列名为“ID”
 	 * @throws SQLException
 	 */
-	public void deleteRows(String strTableName ,List<Integer> IDs) throws SQLException
+	public void deleteRows(String strTableName ,List<Object> IDs) throws SQLException
 	{
 		JdbcUtil jdbcUtil = new JdbcUtil();
 		jdbcUtil.getConnection();
 		String strSQL = "delete from "+strTableName+" where ID=?";
 		List<List<?>> obList = new ArrayList<>();
-		for (int ID : IDs)
+		for (Object ID : IDs)
 		{
-			List<Integer> tempList = new ArrayList<>();
+			List<Object> tempList = new ArrayList<>();
 			tempList.add(ID);
 			obList.add(tempList);
 		}

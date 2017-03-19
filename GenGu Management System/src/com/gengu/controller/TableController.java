@@ -1,20 +1,13 @@
 package com.gengu.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-
 import com.gengu.action.PurchaseAction;
 import com.gengu.action.SaleAction;
 import com.gengu.action.WarehouseAction;
-import com.gengu.common.ConstantsDB;
 import com.gengu.component.PagingPanel;
 import com.gengu.ui.MainFrame;
-import com.gengu.ui.ModifyTablePanel;
 
 /**
  * 各个列表的总命令(修改\添加\删除\)相关的处理

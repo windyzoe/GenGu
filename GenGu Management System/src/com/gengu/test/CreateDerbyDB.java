@@ -161,12 +161,14 @@ public class CreateDerbyDB
 				+ "Classification VARCHAR(30),"
 				+ "PRIMARY KEY (InternalName))");
 		println("Creating table FACTORY...");
-		executeCommand(conn, "CREATE TABLE FACTORY(Name VARCHAR(30) NOT NULL,"
-				+ "PRIMARY KEY (Name))");
-		executeCommand(conn, "CREATE TABLE SUPPLIER(Name VARCHAR(30) NOT NULL,"
-				+ "PRIMARY KEY (Name))");
-		executeCommand(conn, "CREATE TABLE CUSTOMER(Name VARCHAR(30) NOT NULL,"
-				+ "PRIMARY KEY (Name))");
+		executeCommand(conn, "CREATE TABLE FACTORY(ID VARCHAR(30) NOT NULL,"
+				+ "PRIMARY KEY (ID))");
+		executeCommand(conn, "CREATE TABLE SUPPLIER(ID VARCHAR(30) NOT NULL,"
+				+ "PRIMARY KEY (ID))");
+		executeCommand(conn, "CREATE TABLE CUSTOMER(ID VARCHAR(30) NOT NULL,"
+				+ "PRIMARY KEY (ID))");
+		executeCommand(conn, "CREATE TABLE CAR(ID VARCHAR(30) NOT NULL,"
+				+ "PRIMARY KEY (ID))");
 	}
 
 	/**

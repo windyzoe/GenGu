@@ -238,7 +238,7 @@ public class CreateCustomerPanel extends JDialog
 	{
 		Map<String, Object> map=new HashMap<>();
 		String strName = jtfName.getText();
-		map.put("Name", strName);
+		map.put("ID", strName);
 		return map;
 	}
 

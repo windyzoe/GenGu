@@ -37,7 +37,7 @@ public class SupplierDao
 		List<String> strSupplierNameList = new ArrayList<>();
 		try
 		{
-			List<Map<String, Object>> templist = jdbcUtil.findResult("select Name from supplier", null);
+			List<Map<String, Object>> templist = jdbcUtil.findResult("select ID from supplier", null);
 			for (Map<String, Object> map : templist)
 			{
 				for (Map.Entry<String, Object> entry : map.entrySet())

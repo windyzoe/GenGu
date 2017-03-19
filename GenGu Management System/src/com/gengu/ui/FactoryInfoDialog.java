@@ -1,8 +1,13 @@
 package com.gengu.ui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JDialog;
 
+import com.gengu.action.CarAction;
+import com.gengu.action.FactoryAction;
 import com.gengu.common.Constants;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -15,15 +20,29 @@ public class FactoryInfoDialog extends JDialog
 	private JButton jBDelete;
 	private JButton jBRefresh;
 	private JList list;
+	/**
+	 * 饿汉单例模式,线程安全
+	 */
+	private static final FactoryInfoDialog single = new FactoryInfoDialog();
 
+	/**
+	 * 单例模式
+	 * 
+	 * @return
+	 */
+	public static FactoryInfoDialog getInstance()
+	{
+		return single;
+	}
 	/**
 	 * Create the dialog.
 	 */
-	public FactoryInfoDialog()
+	private FactoryInfoDialog()
 	{
 		initPanel();
 		initLayout();
 		addListeners();
+		new FactoryAction().refreshAction();
 	}
 	private void initPanel()
 	{
@@ -51,11 +70,38 @@ public class FactoryInfoDialog extends JDialog
 		JScrollPane scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
-		JList list = new JList();
+		list = new JList();
 		scrollPane.setViewportView(list);
 	}
 	private void addListeners()
 	{
-		
+		jBCreate.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new FactoryAction().createAction();
+			}
+		});
+		jBDelete.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new FactoryAction().deleteAction();
+			}
+		});
+		jBRefresh.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new FactoryAction().refreshAction();
+			}
+		});
+	}
+	public JList getJlist()
+	{
+		return list;
 	}
 }
