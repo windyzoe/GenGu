@@ -231,7 +231,7 @@ public class JdbcUtil
 					cols_value = "";
 				}
 				map.put(cols_name, cols_value);
-				System.out.println(cols_name+" : "+cols_value);
+				//System.out.println(cols_name+" : "+cols_value);
 			}
 			list.add(map);
 		}

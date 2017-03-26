@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.apache.derby.impl.load.Export;
 import org.omg.CORBA.Principal;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel;
@@ -30,6 +31,7 @@ import com.gengu.component.FilterPanel;
 import com.gengu.component.PagingPanel;
 import com.gengu.controller.TableController;
 import com.gengu.ui.sum.ProfitDialog;
+import com.gengu.ui.sum.StoreCost;
 import com.gengu.ui.sum.TransportCostDialog;
 import com.gengu.util.JdbcUtil;
 
@@ -92,6 +94,7 @@ public class MainFrame
 	private JMenu jMenuConfig;
 	private JMenu jMenuHelp;
 	private JMenuItem jMIOpen;
+	private JMenuItem jMIExport;
 	private JMenuItem jMICreateCustomer;
 	private JMenuItem jMIListCustomer;
 	private JMenuItem jMICreateSupplier;
@@ -185,6 +188,7 @@ public class MainFrame
 	{
 		jMenuFile = new JMenu("文件");
 		jMIOpen = new JMenuItem("打开");
+		jMIExport = new JMenuItem("导出");
 		jMenuSetting = new JMenu("设置");
 		jMenuCustomer = new JMenu("客户");
 		jMICreateCustomer = new JMenuItem("新建客户");
@@ -231,6 +235,7 @@ public class MainFrame
 
 		// 菜单命令
 		jMenuFile.add(jMIOpen);
+		jMenuFile.add(jMIExport);
 		jMenuCustomer.add(jMICreateCustomer);
 		jMenuCustomer.add(jMIListCustomer);
 		jMenuConfig.add(jMIFactoryInfo);
@@ -447,6 +452,17 @@ public class MainFrame
 				new TableController().refreshControl();
 			}
 		});
+		jMIExport.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				ExportDialog dialog = new ExportDialog();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
 		jMIDelete.addActionListener(new ActionListener()
 		{
 
@@ -515,6 +531,16 @@ public class MainFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				TransportCostDialog dialog = new TransportCostDialog();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		jBListtoragePay.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				StoreCost dialog = new StoreCost();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}

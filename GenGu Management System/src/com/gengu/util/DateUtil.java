@@ -68,4 +68,8 @@ public class DateUtil
 		strNowTime = sdf.format(new Date());
 		return strNowTime;
 	}
+	public String getDateType()
+	{
+		return DataType;
+	}
 }

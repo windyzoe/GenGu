@@ -79,4 +79,8 @@ public class Constants
 	 * 图标大小
 	 */
 	public final static int ICONSIZE = 17;
+	/**
+	 * 存储费用/日
+	 */
+	public final static double STORECOST = 17;
 }

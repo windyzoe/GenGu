@@ -46,6 +46,55 @@ public class WareHouseDao
 		}
 		return maplist;
 	}
+	/**获取当前的出库数量
+	 * @param strBeforeDate 当前时间
+	 * @param isIn 查的是入库还是出库
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Map<String, Object>> getStoreAmount(String strBeforeDate,boolean isIn) throws SQLException
+	{
+		String strStyle="出库";
+		if (isIn)
+			strStyle="入库";
+		List<Map<String, Object>> maplist = null;
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		try
+		{
+			maplist = jdbcUtil.findResult("SELECT SUM(Quantity) AS Amount FROM warehouselist where OrderTime < Date('"+strBeforeDate+"') AND Style='"+strStyle+"'", null);
+		} catch (SQLException e)
+		{
+			throw e;
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+		return maplist;
+	}
+	/**获取一段时间内的出入库信息
+	 * @param strBeforeDate	起始时间
+	 * @param strAfterDate	终止时间
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Map<String, Object>> getStoreAmount(String strBeforeDate,String strAfterDate) throws SQLException
+	{
+		List<Map<String, Object>> maplist = null;
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		try
+		{
+			maplist = jdbcUtil.findResult("SELECT ID,STYLE,QUANTITY,OrderTime  FROM warehouselist where OrderTime Between Date('"+strBeforeDate+"') and Date('"+strAfterDate+"')", null);
+		} catch (SQLException e)
+		{
+			throw e;
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+		return maplist;
+	}
 	public List<Map<String, Object>> getPaging(int currentPage) throws SQLException
 	{
 		List<Map<String, Object>> maplist=DaoUtil.getInstance().getPagingRows("warehouselist", currentPage);
