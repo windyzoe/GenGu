@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.gengu.controller.TableController;
 import com.gengu.ui.LoginFrame;
 import com.gengu.ui.MainFrame;
 import com.gengu.util.JdbcUtil;
@@ -39,6 +40,8 @@ public class LoginAction implements ActionListener
 			System.setProperty("gengupassword", strPassword);
 			loginFrame.dispose();
 			MainFrame.getInstance().frame.setVisible(true);
+			//当登录成功后,读取出入库信息,显示在界面上
+			new TableController().refreshControl();
 		}else{
 			JOptionPane.showMessageDialog(loginFrame, "用户名密码不正确！", "WARNING", JOptionPane.WARNING_MESSAGE);
 		}

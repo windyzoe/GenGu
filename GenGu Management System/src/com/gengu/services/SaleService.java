@@ -35,7 +35,7 @@ public class SaleService
 		SaleDao.getInstance().createOneList(map);
 	}
 	
-	public List<Map<String, Object>> getPurchaseList()
+	public List<Map<String, Object>> getAllList()
 	{
 		try
 		{

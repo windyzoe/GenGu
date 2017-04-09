@@ -36,6 +36,7 @@ public class MaterialInfoAction
 		if (strMaterial.trim().equals(""))
 		{
 			showErrorMessage("材料名不为空!");
+			return;
 		}
 		new SwingWorker<String, Void>(){
 
@@ -111,6 +112,7 @@ public class MaterialInfoAction
 		if (strModel.trim().equals(""))
 		{
 			showErrorMessage("输入不为空!");
+			return;
 		}
 		new SwingWorker<String, Void>(){
 
@@ -143,6 +145,10 @@ public class MaterialInfoAction
 	{
 		String strClass = MaterialInfoPanel.getInstance().getComboBox().getSelectedItem().toString();
 		List<String> modelList = MaterialInfoPanel.getInstance().getJList().getSelectedValuesList();
+		if (modelList.size()<1)
+		{
+			return;
+		}
 		StringBuffer strMessge=new StringBuffer("确定要删除'");
 		strMessge.append(strClass);
 		strMessge.append("'材料里 : ");

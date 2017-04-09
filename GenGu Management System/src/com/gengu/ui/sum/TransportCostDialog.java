@@ -86,15 +86,19 @@ public class TransportCostDialog extends JDialog
 		panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.X_AXIS));
 
 		JCheckBox checkBox = new JCheckBox("\u6750\u6599\uFF1A");
+		checkBox.setEnabled(false);
 		panel_2.add(checkBox);
 
 		materialBox = new JComboBox();
+		materialBox.setEnabled(false);
 		panel_2.add(materialBox);
 
 		JCheckBox lblNewLabel = new JCheckBox("\u7C7B\u522B\uFF1A");
+		lblNewLabel.setEnabled(false);
 		panel_2.add(lblNewLabel);
 
 		modelBox = new JComboBox();
+		modelBox.setEnabled(false);
 		panel_2.add(modelBox);
 
 		Component horizontalGlue = Box.createHorizontalGlue();

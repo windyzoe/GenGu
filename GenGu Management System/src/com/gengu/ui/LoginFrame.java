@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.gengu.action.LoginAction;
 import com.gengu.common.Constants;
+import com.gengu.component.CustomIcon;
 import com.sun.awt.AWTUtilities;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -78,6 +79,7 @@ public class LoginFrame extends JFrame
 	 */
 	private void initFrame()
 	{
+		setIconImage(new ImageIcon(Constants.PATH_GenGuIcon).getImage());
 		setUndecorated(true);
 		setBounds(100, 100, 500, 400);
 		this.setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);

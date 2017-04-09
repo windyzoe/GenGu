@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.border.TitledBorder;
 
 public class CreateCustomerPanel extends JDialog
 {
@@ -67,7 +68,7 @@ public class CreateCustomerPanel extends JDialog
 	private void initLayout()
 	{
 		setModal(true);
-		setBounds(100, 100, 768, 300);
+		setBounds(100, 100, 827, 323);
 		setTitle("新建客户");
 		setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
 		getContentPane().setLayout(new BorderLayout());
@@ -76,6 +77,7 @@ public class CreateCustomerPanel extends JDialog
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new TitledBorder(null, "\u4FE1\u606F:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			contentPanel.add(panel);
@@ -94,6 +96,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_1 = new JTextField();
+				textField_1.setEnabled(false);
 				panel.add(textField_1);
 				textField_1.setColumns(10);
 			}
@@ -103,6 +106,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_2 = new JTextField();
+				textField_2.setEnabled(false);
 				panel.add(textField_2);
 				textField_2.setColumns(10);
 			}
@@ -112,6 +116,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_3 = new JTextField();
+				textField_3.setEnabled(false);
 				panel.add(textField_3);
 				textField_3.setColumns(10);
 			}
@@ -121,11 +126,13 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				JComboBox comboBox = new JComboBox();
+				comboBox.setEnabled(false);
 				panel.add(comboBox);
 			}
 		}
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new TitledBorder(null, "\u8054\u7CFB:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			contentPanel.add(panel);
@@ -135,6 +142,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_4 = new JTextField();
+				textField_4.setEnabled(false);
 				panel.add(textField_4);
 				textField_4.setColumns(10);
 			}
@@ -144,6 +152,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_5 = new JTextField();
+				textField_5.setEnabled(false);
 				panel.add(textField_5);
 				textField_5.setColumns(10);
 			}
@@ -153,6 +162,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_6 = new JTextField();
+				textField_6.setEnabled(false);
 				panel.add(textField_6);
 				textField_6.setColumns(10);
 			}
@@ -162,12 +172,14 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_7 = new JTextField();
+				textField_7.setEnabled(false);
 				panel.add(textField_7);
 				textField_7.setColumns(10);
 			}
 		}
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new TitledBorder(null, "\u6750\u6599:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			contentPanel.add(panel);
@@ -177,6 +189,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_8 = new JTextField();
+				textField_8.setEnabled(false);
 				panel.add(textField_8);
 				textField_8.setColumns(10);
 			}
@@ -186,6 +199,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_9 = new JTextField();
+				textField_9.setEnabled(false);
 				panel.add(textField_9);
 				textField_9.setColumns(10);
 			}
@@ -195,6 +209,7 @@ public class CreateCustomerPanel extends JDialog
 			}
 			{
 				textField_10 = new JTextField();
+				textField_10.setEnabled(false);
 				panel.add(textField_10);
 				textField_10.setColumns(10);
 			}

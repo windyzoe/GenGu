@@ -13,6 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.gengu.action.ExportAction;
 import com.gengu.common.Constants;
 
 import javax.swing.JComboBox;
@@ -158,7 +159,9 @@ public class ExportDialog extends JDialog
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				
+				ExportAction exportAction =new ExportAction(getSavePath(),getSelectType());
+				exportAction.exportAction();
+				dialog.dispose();
 			}
 		});
 	}
@@ -166,16 +169,12 @@ public class ExportDialog extends JDialog
 	{
 		textField.setText(strPath);
 	}
-	public boolean export()
+	private String getSavePath()
 	{
-		return true;
+		return textField.getText();
 	}
 	private String getSelectType()
 	{
 		return comboBox.getSelectedItem().toString();
-	}
-	private void createExcel(List<List<String>> allInfos , String strPath)
-	{
-		
 	}
 }

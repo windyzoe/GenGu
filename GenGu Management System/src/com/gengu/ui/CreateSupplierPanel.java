@@ -21,6 +21,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 public class CreateSupplierPanel extends JDialog
 {
@@ -66,7 +67,7 @@ public class CreateSupplierPanel extends JDialog
 	public void initLayout()
 	{
 		setModal(true);
-		setBounds(100, 100, 993, 277);
+		setBounds(100, 100, 985, 311);
 		setTitle("新建供应商");
 		setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
 		//
@@ -76,6 +77,7 @@ public class CreateSupplierPanel extends JDialog
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new TitledBorder(null, "\u4FE1\u606F:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			contentPanel.add(panel);
@@ -94,6 +96,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfContactor = new JTextField();
+				tfContactor.setEnabled(false);
 				panel.add(tfContactor);
 				tfContactor.setColumns(10);
 			}
@@ -103,6 +106,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfContactorPhone = new JTextField();
+				tfContactorPhone.setEnabled(false);
 				panel.add(tfContactorPhone);
 				tfContactorPhone.setColumns(10);
 			}
@@ -112,6 +116,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfWorkTime = new JTextField();
+				tfWorkTime.setEnabled(false);
 				panel.add(tfWorkTime);
 				tfWorkTime.setColumns(10);
 				
@@ -122,12 +127,14 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfWeekend = new JTextField();
+				tfWeekend.setEnabled(false);
 				panel.add(tfWeekend);
 				tfWeekend.setColumns(10);
 			}
 		}
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new TitledBorder(null, "\u4ED3\u5E93:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			contentPanel.add(panel);
@@ -137,6 +144,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfStoreAddress = new JTextField();
+				tfStoreAddress.setEnabled(false);
 				panel.add(tfStoreAddress);
 				tfStoreAddress.setColumns(10);
 			}
@@ -146,6 +154,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfStoreWorkTime = new JTextField();
+				tfStoreWorkTime.setEnabled(false);
 				panel.add(tfStoreWorkTime);
 				tfStoreWorkTime.setColumns(10);
 			}
@@ -155,6 +164,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfStorePhone = new JTextField();
+				tfStorePhone.setEnabled(false);
 				panel.add(tfStorePhone);
 				tfStorePhone.setColumns(10);
 			}
@@ -164,12 +174,14 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfOverWork = new JTextField();
+				tfOverWork.setEnabled(false);
 				panel.add(tfOverWork);
 				tfOverWork.setColumns(10);
 			}
 		}
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new TitledBorder(null, "\u6750\u6599:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			FlowLayout flowLayout = (FlowLayout) panel.getLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			contentPanel.add(panel);
@@ -179,6 +191,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfBrand = new JTextField();
+				tfBrand.setEnabled(false);
 				panel.add(tfBrand);
 				tfBrand.setColumns(10);
 			}
@@ -188,6 +201,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfClassification = new JTextField();
+				tfClassification.setEnabled(false);
 				panel.add(tfClassification);
 				tfClassification.setColumns(10);
 			}
@@ -197,6 +211,7 @@ public class CreateSupplierPanel extends JDialog
 			}
 			{
 				tfModel = new JTextField();
+				tfModel.setEnabled(false);
 				panel.add(tfModel);
 				tfModel.setColumns(10);
 			}

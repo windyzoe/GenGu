@@ -50,6 +50,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
@@ -91,6 +92,7 @@ public class MainFrame
 	private JMenu jMenuSetting;
 	private JMenu jMenuCustomer;
 	private JMenu jMenuSupplier;
+	private JMenu jMenuSummery;
 	private JMenu jMenuConfig;
 	private JMenu jMenuHelp;
 	private JMenuItem jMIOpen;
@@ -103,13 +105,14 @@ public class MainFrame
 	private JMenuItem jMIFactoryInfo;
 	private JMenuItem jMIMaterialInfo;
 	private JMenuItem jMICarInfo;
+	private JMenuItem jMIAbout;
 	private JButton jBCreateInOutStorage;
 	private JButton jBCreatePurchase;
 	private JButton jBCreateSale;
-	private JButton jBListProfit;
-	private JButton jBListTranPay;
-	private JButton jBListtoragePay;
-	private JButton jBListOtherPay;
+	private JMenuItem jBListProfit;
+	private JMenuItem jBListTranPay;
+	private JMenuItem jBListtoragePay;
+	private JMenuItem jBListOtherPay;
 	private JButton jBEditInfo;
 	private JButton jBRefresgTab;
 	private JButton jBDelete;
@@ -196,12 +199,19 @@ public class MainFrame
 		jMenuSupplier = new JMenu("供应商");
 		jMICreateSupplier = new JMenuItem("新建供应商");
 		jMIListSupplier = new JMenuItem("供应商概览");
+		jMenuSummery = new JMenu("统计");
+		jBListProfit = new JMenuItem("利润统计");
+		jBListTranPay = new JMenuItem("运费统计");
+		jBListtoragePay = new JMenuItem("仓储费统计");
+		jBListOtherPay = new JMenuItem("其它统计");
 		jMenuConfig = new JMenu("配置");
 		jMIFactoryInfo = new JMenuItem("工厂信息");
 		jMIStorageInfo = new JMenuItem("仓库信息");
 		jMIMaterialInfo = new JMenuItem("材料信息");
 		jMICarInfo = new JMenuItem("运输车号");
 		jMenuHelp = new JMenu("帮助");
+		jMIAbout = new JMenuItem("关于");
+		
 	}
 
 	/**
@@ -230,6 +240,7 @@ public class MainFrame
 		menuBar.add(jMenuSetting);
 		menuBar.add(jMenuCustomer);
 		menuBar.add(jMenuSupplier);
+		menuBar.add(jMenuSummery);
 		menuBar.add(jMenuConfig);
 		menuBar.add(jMenuHelp);
 
@@ -244,7 +255,15 @@ public class MainFrame
 		jMenuConfig.add(jMICarInfo);
 		jMenuSupplier.add(jMICreateSupplier);
 		jMenuSupplier.add(jMIListSupplier);
+		jMenuSummery.add(jBListProfit);
+		jMenuSummery.add(jBListTranPay);
+		jMenuSummery.add(jBListtoragePay);
+		jMenuSummery.add(jBListOtherPay);
+		jMenuHelp.add(jMIAbout);
 
+		//仓库信息先隐藏着
+		jMIStorageInfo.setVisible(false);
+		jMIOpen.setVisible(false);
 		// 表格面板
 		JPanel panel = new JPanel();
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
@@ -280,15 +299,14 @@ public class MainFrame
 	private void initToolbar()
 	{
 		// 工具条命令
-		jBListProfit = new JButton("利润统计");
-		jBListTranPay = new JButton("运费统计");
-		jBListtoragePay = new JButton("仓储费统计");
-		jBListOtherPay = new JButton("其它统计");
-		jBCreateInOutStorage = new JButton("出入库记录");
+		JLabel jlCreateInfo = new JLabel("新建 : ");
+		jlCreateInfo.setForeground(Color.ORANGE);
+		jlCreateInfo.setIcon(new CustomIcon(Constants.PATH_Modify));
+		jBCreateInOutStorage = new JButton("出入库");
 		jBCreateInOutStorage.setIcon(new CustomIcon(Constants.PATH_StoreIn));
-		jBCreatePurchase = new JButton("采购记录");
+		jBCreatePurchase = new JButton("采购");
 		jBCreatePurchase.setIcon(new CustomIcon(Constants.PATH_Purchase));
-		jBCreateSale = new JButton("销售记录");
+		jBCreateSale = new JButton("销售");
 		jBCreateSale.setIcon(new CustomIcon(Constants.PATH_Sale));
 		jBEditInfo = new JButton("修改");
 		jBEditInfo.setIcon(new CustomIcon(Constants.PATH_Modify));
@@ -300,22 +318,17 @@ public class MainFrame
 		toolBar.setFloatable(false);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		toolBar.setRollover(true);
+		toolBar.add(jlCreateInfo);
+		toolBar.addSeparator();
 		toolBar.add(jBCreateInOutStorage);
 		toolBar.add(jBCreatePurchase);
 		toolBar.add(jBCreateSale);
 
-		toolBar.addSeparator();
+		
 
-		toolBar.add(jBEditInfo);
-		toolBar.add(jBRefresgTab);
-		toolBar.add(jBDelete);
-
-		toolBar.addSeparator();
-
-		toolBar.add(jBListProfit);
-		toolBar.add(jBListTranPay);
-		toolBar.add(jBListtoragePay);
-		toolBar.add(jBListOtherPay);
+		//toolBar.add(jBEditInfo);
+		//toolBar.add(jBRefresgTab);
+		//toolBar.add(jBDelete);
 	}
 
 	/**
@@ -541,6 +554,16 @@ public class MainFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				StoreCost dialog = new StoreCost();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		jMIAbout.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				AboutDialog dialog =new AboutDialog();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}

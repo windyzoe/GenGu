@@ -39,6 +39,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
+import java.awt.Color;
 
 /**
  * 材料和牌号管理界面
@@ -49,7 +51,6 @@ public class MaterialInfoPanel extends JDialog
 {
 	private JComboBox comboBox;
 	private JButton jbCreateMaterial;
-	private JButton jbRefresh;
 	private JButton jbCreateModel;
 	private JButton jbDeleteMaterial;
 	private JButton jbDeleteModel;
@@ -75,6 +76,7 @@ public class MaterialInfoPanel extends JDialog
 	 * 饿汉单例模式,线程安全
 	 */
 	private static final MaterialInfoPanel single = new MaterialInfoPanel();
+	private JPanel panel_3;
 
 	/**
 	 * 单例模式
@@ -110,7 +112,7 @@ public class MaterialInfoPanel extends JDialog
 	private void initLayout()
 	{
 		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "材料", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u7F16\u8F91", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		getContentPane().add(panel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]
@@ -156,34 +158,31 @@ public class MaterialInfoPanel extends JDialog
 		gbc_jbDeleteModel.gridy = 3;
 		panel.add(jbDeleteModel, gbc_jbDeleteModel);
 
-		jbRefresh = new JButton("刷新");
-		GridBagConstraints gbc_btnNewButton_3_1_2 = new GridBagConstraints();
-		gbc_btnNewButton_3_1_2.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_3_1_2.gridwidth = 2;
-		gbc_btnNewButton_3_1_2.gridx = 0;
-		gbc_btnNewButton_3_1_2.gridy = 4;
-		panel.add(jbRefresh, gbc_btnNewButton_3_1_2);
-
 		JPanel panel_2 = new JPanel();
 		getContentPane().add(panel_2, BorderLayout.CENTER);
 		panel_2.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "\u6750\u6599:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		FlowLayout flowLayout = (FlowLayout) panel_1.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
 		panel_2.add(panel_1, BorderLayout.NORTH);
-
-		JLabel lblNewLabel = new JLabel("材料:");
-		panel_1.add(lblNewLabel);
 		
 		DefaultComboBoxModel model = new DefaultComboBoxModel();
 		comboBox = new JComboBox(model);
 		panel_1.add(comboBox);
-
-		JScrollPane scrollPane = new JScrollPane();
-		panel_2.add(scrollPane);
-
-		jlist = new JList<String>();
-		jlist.setLayoutOrientation(JList.VERTICAL_WRAP);
-		scrollPane.setViewportView(jlist);
+		
+		panel_3 = new JPanel();
+		panel_3.setBorder(new TitledBorder(null, "\u724C\u53F7:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_2.add(panel_3, BorderLayout.CENTER);
+				panel_3.setLayout(new BorderLayout(0, 0));
+		
+				JScrollPane scrollPane = new JScrollPane();
+				panel_3.add(scrollPane);
+				
+						jlist = new JList<String>();
+						jlist.setLayoutOrientation(JList.VERTICAL_WRAP);
+						scrollPane.setViewportView(jlist);
 	}
 
 	private void addListeners()
@@ -218,14 +217,6 @@ public class MaterialInfoPanel extends JDialog
 			public void actionPerformed(ActionEvent e)
 			{
 				new MaterialInfoAction().deleteModelAction();
-			}
-		});
-		jbRefresh.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				new MaterialInfoAction().refreshAction(comboBox);
 			}
 		});
 		comboBox.addItemListener(new ItemListener()
