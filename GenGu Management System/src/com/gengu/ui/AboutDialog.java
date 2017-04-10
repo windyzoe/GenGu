@@ -22,39 +22,22 @@ import java.awt.Image;
 import javax.swing.JTextPane;
 import javax.swing.JEditorPane;
 
+/**关于 页面
+ * @author XUZH
+ *
+ */
 public class AboutDialog extends JDialog
 {
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)
-	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					AboutDialog dialog = new AboutDialog();
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the dialog.
 	 */
 	public AboutDialog()
 	{
 		setBounds(100, 100, 450, 300);
-		
 		getContentPane().setLayout(new GridLayout(0, 2, 0, 0));
+		// 将界面放在最中央
+		this.setLocation((Constants.SCREEN_WIDTH - this.getWidth()) / 2, (Constants.SCREEN_HEIGHT - this.getHeight()) / 2);
+		setTitle("关于");
 		
 		JPanel panel = new JPanel();
 		getContentPane().add(panel);
@@ -70,7 +53,7 @@ public class AboutDialog extends JDialog
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
 		String str = new String(
-				"     亘古管理系统\n"
+				"      亘古管理系统\n\n\n\n"
 				+ "当前版本 : 1.0\n"
 				+ "开源产品,请注明出处.");
 		JEditorPane editPane = new JEditorPane("text/plain", str);

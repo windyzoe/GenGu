@@ -156,7 +156,6 @@ public class MainFrame
 	private static final MainFrame single = new MainFrame();
 	private JPopupMenu popupMenu;
 
-
 	/**
 	 * 单例模式
 	 * 
@@ -211,7 +210,7 @@ public class MainFrame
 		jMICarInfo = new JMenuItem("运输车号");
 		jMenuHelp = new JMenu("帮助");
 		jMIAbout = new JMenuItem("关于");
-		
+
 	}
 
 	/**
@@ -261,7 +260,7 @@ public class MainFrame
 		jMenuSummery.add(jBListOtherPay);
 		jMenuHelp.add(jMIAbout);
 
-		//仓库信息先隐藏着
+		// 仓库信息先隐藏着
 		jMIStorageInfo.setVisible(false);
 		jMIOpen.setVisible(false);
 		// 表格面板
@@ -292,7 +291,7 @@ public class MainFrame
 		scrollPane2.setViewportView(warehouseTable);
 
 		// 可左右拉伸面板加入选项面板和可切换面板
-		filterPanel= new FilterPanel();
+		filterPanel = new FilterPanel();
 		frame.getContentPane().add(filterPanel, BorderLayout.WEST);
 	}
 
@@ -324,11 +323,9 @@ public class MainFrame
 		toolBar.add(jBCreatePurchase);
 		toolBar.add(jBCreateSale);
 
-		
-
-		//toolBar.add(jBEditInfo);
-		//toolBar.add(jBRefresgTab);
-		//toolBar.add(jBDelete);
+		// toolBar.add(jBEditInfo);
+		// toolBar.add(jBRefresgTab);
+		// toolBar.add(jBDelete);
 	}
 
 	/**
@@ -413,7 +410,7 @@ public class MainFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				FactoryInfoDialog dialog =FactoryInfoDialog.getInstance();
+				FactoryInfoDialog dialog = FactoryInfoDialog.getInstance();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
@@ -467,7 +464,7 @@ public class MainFrame
 		});
 		jMIExport.addActionListener(new ActionListener()
 		{
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
@@ -563,7 +560,7 @@ public class MainFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				AboutDialog dialog =new AboutDialog();
+				AboutDialog dialog = new AboutDialog();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			}
@@ -596,7 +593,7 @@ public class MainFrame
 	 */
 	private void registerTabPaneClose()
 	{
-		jTabbedPane.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.FALSE);
+		jTabbedPane.putClientProperty(SubstanceLookAndFeel.TABBED_PANE_CLOSE_BUTTONS_PROPERTY, Boolean.TRUE);
 
 		// register tab close listener on the specific tabbed pane.
 		SubstanceLookAndFeel.registerTabCloseChangeListener(jTabbedPane, new VetoableTabCloseListener()
@@ -611,11 +608,15 @@ public class MainFrame
 
 			public boolean vetoTabClosing(JTabbedPane tabbedPane, Component tabComponent)
 			{
-				return true;
-				// (JOptionPane.showConfirmDialog(jTabbedPane,
-				// "Are you sure you want to close " +
-				// tabbedPane.getTitleAt(tabbedPane.indexOfComponent(tabComponent))
-				// + "?") != JOptionPane.YES_OPTION);
+				String strTabName = getTabName();
+				if (strTabName.equals("出入库") || strTabName.equals("采购") || strTabName.equals("销售"))
+				{
+					JOptionPane.showMessageDialog(frame, strTabName+" 页面为常用页面,禁止关闭.", "Information", JOptionPane.INFORMATION_MESSAGE);
+					return true;
+				}else {
+					return JOptionPane.showConfirmDialog(frame, "是否关闭 "+strTabName+" 页面" ,"Information" ,JOptionPane.YES_NO_OPTION)==1;
+				}
+				
 			}
 		});
 
