@@ -87,7 +87,7 @@ public class PurchaseAction
 			e.printStackTrace();
 		}
 		// 刷新toolTip
-		int tabIndex = MainFrame.getInstance().getTabPane().getSelectedIndex();
+		int tabIndex = MainFrame.getInstance().getTabIndex("采购");
 		MainFrame.getInstance().getTabPane().setToolTipTextAt(tabIndex, 1 + ":" + count);
 		// 刷新组件
 		PagingPanel.getInstance().setPanel(count);

@@ -64,6 +64,29 @@ public class SaleDao
 		}
 		return maplist;
 	}
+	/**获取一段时间的销售总价钱
+	 * @param strBeforeDate
+	 * @param strAfterDate
+	 * @return 键值对.value是总价
+	 * @throws SQLException
+	 */
+	public List<Map<String, Object>> getTotalMoney(String strBeforeDate , String strAfterDate) throws SQLException
+	{
+		List<Map<String, Object>> maplist = null;
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		try
+		{
+			maplist = jdbcUtil.findResult("SELECT SUM(TotalPrice) AS COST FROM salelist where OrderTime Between Date('"+strBeforeDate+"') and Date('"+strAfterDate+"')", null);
+		} catch (SQLException e)
+		{
+			throw e;
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+		return maplist;
+	}
 	public List<Map<String, Object>> getPaging(int currentPage) throws SQLException
 	{
 		List<Map<String, Object>> maplist=DaoUtil.getInstance().getPagingRows("salelist", currentPage);

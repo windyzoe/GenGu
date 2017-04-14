@@ -47,7 +47,7 @@ public class StoreCostService
 	 * @param strBeforeDate
 	 * @return
 	 */
-	public double getStoreAmount(String strBeforeDate)
+	private double getStoreAmount(String strBeforeDate)
 	{
 		double allCost = 0;
 		try
@@ -86,7 +86,7 @@ public class StoreCostService
 	 * @param strAfterDate
 	 * @return key:时间 value:出入库数量
 	 */
-	public Map<String, Double> getStoreList(String strBeforeDate, String strAfterDate)
+	private Map<String, Double> getStoreList(String strBeforeDate, String strAfterDate)
 	{
 		Map<String, Double> resultMap = new HashMap<>();
 		try
@@ -117,6 +117,11 @@ public class StoreCostService
 		return resultMap;
 	}
 
+	/**获取一段时间的仓库费用
+	 * @param strBeforeDate
+	 * @param strAfterDate
+	 * @return
+	 */
 	public double getStoreCost(String strBeforeDate, String strAfterDate)
 	{
 		double cost = 0;

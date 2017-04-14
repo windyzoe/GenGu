@@ -1,7 +1,5 @@
 package com.gengu.ui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,15 +9,9 @@ import com.gengu.common.Constants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.GridLayout;
 import java.awt.Image;
-import javax.swing.JTextPane;
 import javax.swing.JEditorPane;
 
 /**¹ØÓÚ Ò³Ãæ

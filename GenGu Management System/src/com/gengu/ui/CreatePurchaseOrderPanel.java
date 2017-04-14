@@ -7,9 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -19,20 +17,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.border.TitledBorder;
 
 import com.gengu.action.CarAction;
-import com.gengu.action.CreateAction;
 import com.gengu.action.MaterialInfoAction;
 import com.gengu.action.SupplierAction;
-import com.gengu.action.CreateAction.CreatePurchaseOrderActionListener;
 import com.gengu.action.FactoryAction;
 import com.gengu.common.Constants;
 import com.gengu.services.PurchaseService;
-import com.gengu.services.SupplierService;
 import com.gengu.util.DateUtil;
 
 import javax.swing.JComboBox;

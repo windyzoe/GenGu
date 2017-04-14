@@ -6,6 +6,8 @@ import java.awt.BorderLayout;
 import javax.swing.border.TitledBorder;
 
 import com.gengu.action.MaterialInfoAction;
+import com.gengu.action.sum.ProfitAction;
+import com.gengu.action.sum.StoreCostAction;
 import com.gengu.common.Constants;
 import com.gengu.component.CustomTable;
 import com.gengu.util.DateUtil;
@@ -13,6 +15,9 @@ import com.gengu.util.DateUtil;
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JLabel;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Date;
@@ -111,6 +116,7 @@ public class ProfitDialog extends JDialog
 	}
 	private void addListeners()
 	{
+		ProfitDialog dialog = this;
 		materialBox.addItemListener(new ItemListener()
 		{
 			@Override
@@ -121,6 +127,16 @@ public class ProfitDialog extends JDialog
 					System.out.println("now combo Changed");
 					new MaterialInfoAction().refreshModel(materialBox.getSelectedItem().toString(), modelBox);
 				}
+			}
+		});
+		okButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				String strBefore = dialog.beforeDate.getText();
+				String strafter = dialog.afterDate.getText();
+				new ProfitAction().getProfit(table, strBefore, strafter);
 			}
 		});
 		

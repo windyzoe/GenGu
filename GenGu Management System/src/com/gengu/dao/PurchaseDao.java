@@ -47,6 +47,12 @@ public class PurchaseDao
 		}
 		return maplist;
 	}
+	/**获取一段时间的运输费用
+	 * @param strBeforeDate 起始时间(订单时间)
+	 * @param strAfterDate	结束时间(订单时间)
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<Map<String, Object>> getTransportCost(String strBeforeDate , String strAfterDate) throws SQLException
 	{
 		List<Map<String, Object>> maplist = null;
@@ -55,6 +61,29 @@ public class PurchaseDao
 		try
 		{
 			maplist = jdbcUtil.findResult("SELECT SUM(TansCost) AS COST FROM purchaselist where OrderTime Between Date('"+strBeforeDate+"') and Date('"+strAfterDate+"')", null);
+		} catch (SQLException e)
+		{
+			throw e;
+		} finally
+		{
+			jdbcUtil.releaseConn();
+		}
+		return maplist;
+	}
+	/**获取一段时间的采购总价
+	 * @param strBeforeDate
+	 * @param strAfterDate
+	 * @return 一个键值对,value是总价
+	 * @throws SQLException
+	 */
+	public List<Map<String, Object>> getTotalMoney(String strBeforeDate , String strAfterDate) throws SQLException
+	{
+		List<Map<String, Object>> maplist = null;
+		JdbcUtil jdbcUtil = new JdbcUtil();
+		jdbcUtil.getConnection();
+		try
+		{
+			maplist = jdbcUtil.findResult("SELECT SUM(TotalPrice) AS COST FROM purchaselist where OrderTime Between Date('"+strBeforeDate+"') and Date('"+strAfterDate+"')", null);
 		} catch (SQLException e)
 		{
 			throw e;

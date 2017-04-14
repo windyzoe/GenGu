@@ -626,6 +626,18 @@ public class MainFrame
 	{
 		return this.jTabbedPane;
 	}
+	public int getTabIndex(String strTabName)
+	{
+		int count = jTabbedPane.getTabCount();
+		for (int i = 0; i < count; i++)
+		{
+			if (jTabbedPane.getTitleAt(i).equals(strTabName))
+			{
+				return i ;
+			}
+		}
+		return -1;
+	}
 
 	/**
 	 * 获取当前窗口tab页名
